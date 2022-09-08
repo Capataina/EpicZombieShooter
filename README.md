@@ -1,4 +1,2 @@
 # EpicZombieShooter
-
-Gaming zombie shooter poop nbi,gg
-asdasdasdasdadasd
+Gaming zombie shooter poop nbi,gg brhhy
