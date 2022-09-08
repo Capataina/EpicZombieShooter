@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour
         );
     }
 
+    // Detect rc, find location, rotate character controller
+
     // Start is called before the first frame update
     void Start()
     {
@@ -41,20 +43,48 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        groundedPlayer = isGrounded();
+        // Vector3 mousePosition = Input.mousePosition;
+        // Vector3 targetPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        // Vector3 relativePosition = targetPosition - transform.position;
+        // Quaternion playerRotation = Quaternion.LookRotation(relativePosition);
+        // transform.rotation = playerRotation;
 
-        print(groundedPlayer);
+        // Rotate Player to Mouse on RightClick
+
+        Vector3 mousePosition = Input.mousePosition;
+        Ray mousePositionRay = Camera.main.ScreenPointToRay(mousePosition);
+        Plane mousePositionPlane = new Plane(Vector3.up, Vector3.zero);
+        float mouseDistance;
+        if (
+            mousePositionPlane.Raycast(mousePositionRay, out mouseDistance)
+            && Input.GetMouseButton(1)
+        )
+        {
+            Vector3 rotaionTarget = mousePositionRay.GetPoint(mouseDistance);
+            Vector3 rotationDirection = rotaionTarget - transform.position;
+            float playerRotation =
+                Mathf.Atan2(rotationDirection.x, rotationDirection.z) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, playerRotation, 0);
+        }
+
+        // idk wtf this is
+        groundedPlayer = isGrounded();
+        // print(groundedPlayer);
 
         if (groundedPlayer && PlayerVelocity.y < 0)
         {
             PlayerVelocity.y = 0f;
         }
 
+        // Get horizontal and vertical player inputs
+
         Vector3 PlayerMovement = new Vector3(
             Input.GetAxis("Horizontal"),
             0,
             Input.GetAxis("Vertical")
         );
+
+        // Horizontal and Vertical Movement
 
         PlayerControls.Move(PlayerMovement * Time.deltaTime * playerSpeed);
 
