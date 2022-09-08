@@ -18,6 +18,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     LayerMask defaultLayer;
 
+    [SerializeField]
+    Camera PlayerCamera;
+
     private bool isGrounded()
     {
         RaycastHit hit;
@@ -52,7 +55,7 @@ public class PlayerController : MonoBehaviour
         // Rotate Player to Mouse on RightClick
 
         Vector3 mousePosition = Input.mousePosition;
-        Ray mousePositionRay = Camera.main.ScreenPointToRay(mousePosition);
+        Ray mousePositionRay = PlayerCamera.ScreenPointToRay(mousePosition);
         Plane mousePositionPlane = new Plane(Vector3.up, Vector3.zero);
         float mouseDistance;
         if (
