@@ -7,12 +7,19 @@ public class CameraFollowsPlayer : MonoBehaviour
     [SerializeField]
     Transform target;
 
+    Vector3 offset;
+
+    void Start()
+    {
+        offset = transform.position - target.position;
+    }
+
     void Update()
     {
         transform.position = new Vector3(
             target.position.x,
-            transform.position.y,
+            target.position.y,
             target.position.z
-        );
+        ) + offset;
     }
 }

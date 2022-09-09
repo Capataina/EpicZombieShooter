@@ -10,6 +10,9 @@ public class PlayerController : MonoBehaviour
     private float gravityValue = -9.81f;
 
     [SerializeField]
+    bool affectedByGravity = true;
+
+    [SerializeField]
     private float playerSpeed = 4.0f;
 
     [SerializeField]
@@ -20,6 +23,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     Camera PlayerCamera;
+
+
 
     private bool isGrounded()
     {
@@ -56,7 +61,7 @@ public class PlayerController : MonoBehaviour
 
         Vector3 mousePosition = Input.mousePosition;
         Ray mousePositionRay = PlayerCamera.ScreenPointToRay(mousePosition);
-        Plane mousePositionPlane = new Plane(Vector3.up, Vector3.zero);
+        Plane mousePositionPlane = new Plane(Vector3.up, Vector3.up * transform.position.y);
         float mouseDistance;
         if (
             mousePositionPlane.Raycast(mousePositionRay, out mouseDistance)
@@ -101,7 +106,7 @@ public class PlayerController : MonoBehaviour
             PlayerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
         }
 
-        PlayerVelocity.y += gravityValue * Time.deltaTime;
+        if (affectedByGravity) PlayerVelocity.y += gravityValue * Time.deltaTime;
         PlayerControls.Move(PlayerVelocity * Time.deltaTime);
     }
 }
