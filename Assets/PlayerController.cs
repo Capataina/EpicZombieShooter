@@ -2,18 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerStats))]
 public class PlayerController : MonoBehaviour
 {
-    private CharacterController PlayerControls;
+    private CharacterController playerControls;
     private Vector3 PlayerVelocity;
     private bool groundedPlayer;
     private float gravityValue = -9.81f;
 
-    [SerializeField]
-    bool affectedByGravity = true;
+    private PlayerStats playerStats;
 
     [SerializeField]
-    private float playerSpeed = 4.0f;
+    bool affectedByGravity = true;
 
     [SerializeField]
     private float jumpHeight = 4.0f;
@@ -22,12 +22,22 @@ public class PlayerController : MonoBehaviour
     LayerMask defaultLayer;
 
     [SerializeField]
-    Camera PlayerCamera;
+    Camera playerCamera;
 
     [SerializeField]
     float rotationSpeed;
 
+    [SerializeField]
+    float sprintStaminaCost;
 
+    [HideInInspector] public bool isSprinting;
+
+    private float speed;
+
+    private void Awake()
+    {
+        playerStats = GetComponent<PlayerStats>();
+    }
 
     private bool isGrounded()
     {
@@ -48,15 +58,29 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PlayerControls = GetComponent<CharacterController>();
+        playerControls = GetComponent<CharacterController>();
+        playerCamera.transform.parent = null;
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Check if sprinting and adjust speed
+        if (Input.GetKey(KeyCode.LeftShift) && playerStats.stamina > 0)
+        {
+            speed = playerStats.sprintSpeed;
+            isSprinting = true;
+            playerStats.ReduceStamina(sprintStaminaCost);
+        }
+        else
+        {
+            speed = playerStats.walkSpeed;
+            isSprinting = false;
+        }
+
         // Right click rottaion
         Vector3 mousePosition = Input.mousePosition;
-        Ray mousePositionRay = PlayerCamera.ScreenPointToRay(mousePosition);
+        Ray mousePositionRay = playerCamera.ScreenPointToRay(mousePosition);
         Plane mousePositionPlane = new Plane(Vector3.up, Vector3.up * transform.position.y);
         float mouseDistance;
         if (
@@ -90,7 +114,7 @@ public class PlayerController : MonoBehaviour
 
         // Horizontal and Vertical Movement
 
-        PlayerControls.Move(playerMovement * Time.deltaTime * playerSpeed);
+        playerControls.Move(playerMovement * Time.deltaTime * speed);
 
         if (playerMovement != Vector3.zero && !Input.GetMouseButton(1))
         {
@@ -104,6 +128,6 @@ public class PlayerController : MonoBehaviour
         }
 
         if (affectedByGravity) PlayerVelocity.y += gravityValue * Time.deltaTime;
-        PlayerControls.Move(PlayerVelocity * Time.deltaTime);
+        playerControls.Move(PlayerVelocity * Time.deltaTime);
     }
 }
