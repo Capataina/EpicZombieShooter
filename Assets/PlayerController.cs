@@ -24,6 +24,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     Camera PlayerCamera;
 
+    [SerializeField]
+    float rotationSpeed;
+
 
 
     private bool isGrounded()
@@ -51,14 +54,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Vector3 mousePosition = Input.mousePosition;
-        // Vector3 targetPosition = Camera.main.ScreenToWorldPoint(mousePosition);
-        // Vector3 relativePosition = targetPosition - transform.position;
-        // Quaternion playerRotation = Quaternion.LookRotation(relativePosition);
-        // transform.rotation = playerRotation;
-
-        // Rotate Player to Mouse on RightClick
-
+        // Right click rottaion
         Vector3 mousePosition = Input.mousePosition;
         Ray mousePositionRay = PlayerCamera.ScreenPointToRay(mousePosition);
         Plane mousePositionPlane = new Plane(Vector3.up, Vector3.up * transform.position.y);
@@ -75,7 +71,7 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, playerRotation, 0);
         }
 
-        // idk wtf this is
+        // is player grounded
         groundedPlayer = isGrounded();
         // print(groundedPlayer);
 
@@ -86,7 +82,7 @@ public class PlayerController : MonoBehaviour
 
         // Get horizontal and vertical player inputs
 
-        Vector3 PlayerMovement = new Vector3(
+        Vector3 playerMovement = new Vector3(
             Input.GetAxis("Horizontal"),
             0,
             Input.GetAxis("Vertical")
@@ -94,11 +90,12 @@ public class PlayerController : MonoBehaviour
 
         // Horizontal and Vertical Movement
 
-        PlayerControls.Move(PlayerMovement * Time.deltaTime * playerSpeed);
+        PlayerControls.Move(playerMovement * Time.deltaTime * playerSpeed);
 
-        if (PlayerMovement != Vector3.zero)
+        if (playerMovement != Vector3.zero && !Input.GetMouseButton(1))
         {
-            gameObject.transform.forward = PlayerMovement;
+            Quaternion newPlayerRotation = Quaternion.LookRotation(playerMovement, Vector3.up);
+            transform.rotation = Quaternion.Lerp(transform.rotation, newPlayerRotation, Time.deltaTime * rotationSpeed);
         }
 
         if (Input.GetButtonDown("Jump") && groundedPlayer)
