@@ -1,31 +1,52 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class ZombieStateMachineController : MonoBehaviour
 {
-    ZombieCurrentState currentState;
+    [HideInInspector]
+    public NavMeshAgent baseWander;
+
+    [HideInInspector]
+    public ZombieCurrentState currentState;
 
     [SerializeField]
-    ZombieBaseIdleState idleState = new ZombieBaseIdleState();
+    public ZombieBaseIdleState idleState;
 
     [SerializeField]
-    ZombieBaseWanderState wanderState = new ZombieBaseWanderState();
+    public ZombieBaseWanderState wanderState;
 
     [SerializeField]
-    ZombieBaseAlertState alertState = new ZombieBaseAlertState();
+    public ZombieBaseAlertState alertState;
 
     [SerializeField]
-    ZombieBaseAttackState attackState = new ZombieBaseAttackState();
+    public ZombieBaseAttackState attackState;
 
     [SerializeField]
-    ZombieBaseDeathState deathState = new ZombieBaseDeathState();
+    public ZombieBaseDeathState deathState;
+
+    void Awake()
+    {
+        baseWander = GetComponent<NavMeshAgent>();
+    }
 
     void Start()
     {
         currentState = idleState;
+
+        currentState.EnterState(this);
     }
 
     // Update is called once per frame
-    void Update() { }
+    void Update()
+    {
+        currentState.UpdateState(this);
+    }
+
+    public void SwitchState(ZombieCurrentState newState)
+    {
+        currentState = newState;
+        currentState.EnterState(this);
+    }
 }

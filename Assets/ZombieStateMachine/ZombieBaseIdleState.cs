@@ -2,9 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(menuName = "StateMachine/Zombie/BaseStates/Idle")]
 public class ZombieBaseIdleState : ZombieCurrentState
 {
-    public override void EnterState(ZombieStateMachineController zombie) { }
+    private float timeToSwitch = 3;
 
-    public override void UpdateState(ZombieStateMachineController zombie) { }
+    private float stateSwitchTimer = 0;
+
+    public override void EnterState(ZombieStateMachineController zombie)
+    {
+        Debug.Log("Entered Idle State!");
+    }
+
+    public override void UpdateState(ZombieStateMachineController zombie)
+    {
+        if (zombie.currentState == zombie.idleState)
+        {
+            stateSwitchTimer += Time.deltaTime;
+            Debug.Log(stateSwitchTimer);
+        }
+
+        if (stateSwitchTimer >= timeToSwitch)
+        {
+            zombie.SwitchState(zombie.wanderState);
+            stateSwitchTimer = 0;
+        }
+    }
 }
