@@ -271,6 +271,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1291448386}
+  smoothing: 0.07
 --- !u!1 &1087125177
 GameObject:
   m_ObjectHideFlags: 0

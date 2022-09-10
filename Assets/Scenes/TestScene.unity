@@ -852,6 +852,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 963194229, guid: 602e107f16ba09c4ca37abe07813c19d, type: 3}
+      propertyPath: maxSpeed
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 963194229, guid: 602e107f16ba09c4ca37abe07813c19d, type: 3}
+      propertyPath: smoothing
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 963194229, guid: 602e107f16ba09c4ca37abe07813c19d, type: 3}
+      propertyPath: cameraSmoothing
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1972434594, guid: 602e107f16ba09c4ca37abe07813c19d, type: 3}
+      propertyPath: PlayerCamera
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 9211238634253036353, guid: 602e107f16ba09c4ca37abe07813c19d, type: 3}
       propertyPath: m_RootOrder
       value: 2
