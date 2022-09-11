@@ -7,9 +7,11 @@ using UnityEngine.AI;
 public class ZombieBaseWanderState : ZombieCurrentState
 {
     private float wanderRadius = 10;
-    private float wanderTimer = 5;
-    private float timer = 0;
-    private float continueWander;
+    private float wanderTimer = 4;
+    private float timer = 2;
+    public float wanderChance = 100;
+    public float timesWandered = 0;
+    private float randomPercentage = 0;
 
     private static Vector3 RandomNavSphere(Vector3 origin, float dist, int layermask)
     {
@@ -24,6 +26,16 @@ public class ZombieBaseWanderState : ZombieCurrentState
         return navHit.position;
     }
 
+    private void Wander(ZombieStateMachineController zombie)
+    {
+        Vector3 newPos = RandomNavSphere(zombie.transform.position, wanderRadius, -1);
+        zombie.baseWander.destination = newPos;
+        timesWandered += 1;
+        wanderChance = (100 - (timesWandered * 15));
+        timer = 0;
+        randomPercentage = Random.Range(0, 100);
+    }
+
     public override void EnterState(ZombieStateMachineController zombie)
     {
         Debug.Log("Entered wandering state!");
@@ -31,20 +43,22 @@ public class ZombieBaseWanderState : ZombieCurrentState
 
     public override void UpdateState(ZombieStateMachineController zombie)
     {
-        timer += Time.deltaTime;
-        if (timer >= wanderTimer)
+        Debug.Log(wanderChance);
+        Debug.Log(timesWandered);
+        if (wanderChance >= randomPercentage)
         {
-            Vector3 newPos = RandomNavSphere(zombie.transform.position, wanderRadius, -1);
-            zombie.baseWander.destination = newPos;
-            timer = 0;
+            timer += Time.deltaTime;
+            if (timer >= wanderTimer)
+            {
+                Wander(zombie);
+            }
+        }
+        else
+        {
+            timer = 2;
+            timesWandered = 0;
+            wanderChance = 100;
             zombie.SwitchState(zombie.idleState);
-            // continueWander = Random.Range(0, 100);
-            // if (continueWander >= 70)
-            // {
-            //     Vector3 newPos = RandomNavSphere(zombie.transform.position, wanderRadius, -1);
-            //     zombie.baseWander.destination = newPos;
-            //     timer = 0;
-            // }
         }
     }
 }
