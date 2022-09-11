@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c24466d8b6be7174b88f7e8b05d9bdde, type: 3}
   m_Name: BaseWanderState
   m_EditorClassIdentifier: 
+  wanderChance: 100
+  timesWandered: 0

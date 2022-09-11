@@ -19,7 +19,6 @@ public class ZombieBaseIdleState : ZombieCurrentState
         if (zombie.currentState == zombie.idleState)
         {
             stateSwitchTimer += Time.deltaTime;
-            Debug.Log(stateSwitchTimer);
         }
 
         if (stateSwitchTimer >= timeToSwitch)

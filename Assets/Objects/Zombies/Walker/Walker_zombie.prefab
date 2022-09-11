@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 7436335366242292176}
   - component: {fileID: 7436335366242292191}
   - component: {fileID: 221768434391078996}
-  - component: {fileID: 625366731}
   - component: {fileID: 320251866}
   m_Layer: 0
   m_Name: Walker_zombie
@@ -122,21 +121,6 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &625366731
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7436335366242292190}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6d78d7e035053e4f9d2e073ee67cc3d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PerspectiveCamera: {fileID: 0}
-  wanderRadius: 10
-  wanderTimer: 10
 --- !u!114 &320251866
 MonoBehaviour:
   m_ObjectHideFlags: 0
