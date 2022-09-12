@@ -10,8 +10,6 @@ public class PlayerController : MonoBehaviour
     private bool groundedPlayer;
     private float gravityValue = -9.81f;
 
-    private PlayerStats playerStats;
-
     [SerializeField]
     bool affectedByGravity = true;
 
@@ -65,16 +63,24 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Get horizontal and vertical player inputs
+
+        Vector3 playerMovement = new Vector3(
+            Input.GetAxis("Horizontal"),
+            0,
+            Input.GetAxis("Vertical")
+        );
+
         // Check if sprinting and adjust speed
-        if (Input.GetKey(KeyCode.LeftShift) && playerStats.stamina > 0)
+        if (Input.GetKey(KeyCode.LeftShift) && playerData.Stamina > 0 && playerMovement != Vector3.zero)
         {
-            speed = playerStats.sprintSpeed;
+            speed = playerData.sprintSpeed;
             isSprinting = true;
-            playerStats.ReduceStamina(sprintStaminaCost);
+            playerData.ReduceStamina(sprintStaminaCost);
         }
         else
         {
-            speed = playerStats.walkSpeed;
+            speed = playerData.walkSpeed;
             isSprinting = false;
             if (playerData.Stamina < playerData.maxStamina) playerData.AddStamina(playerData.staminaGain);
         }
@@ -105,13 +111,6 @@ public class PlayerController : MonoBehaviour
             PlayerVelocity.y = 0f;
         }
 
-        // Get horizontal and vertical player inputs
-
-        Vector3 playerMovement = new Vector3(
-            Input.GetAxis("Horizontal"),
-            0,
-            Input.GetAxis("Vertical")
-        );
 
         // Horizontal and Vertical Movement
 
