@@ -2,15 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerStats))]
 public class PlayerController : MonoBehaviour
 {
+    private PlayerData playerData;
     private CharacterController playerControls;
     private Vector3 PlayerVelocity;
     private bool groundedPlayer;
     private float gravityValue = -9.81f;
-
-    private PlayerStats playerStats;
 
     [SerializeField]
     bool affectedByGravity = true;
@@ -34,11 +32,6 @@ public class PlayerController : MonoBehaviour
 
     private float speed;
 
-    private void Awake()
-    {
-        playerStats = GetComponent<PlayerStats>();
-    }
-
     private bool isGrounded()
     {
         RaycastHit hit;
@@ -58,6 +51,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerData = PlayerData.Instance;
         playerControls = GetComponent<CharacterController>();
         playerCamera.transform.parent = null;
     }
@@ -65,17 +59,26 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Get horizontal and vertical player inputs
+
+        Vector3 playerMovement = new Vector3(
+            Input.GetAxis("Horizontal"),
+            0,
+            Input.GetAxis("Vertical")
+        );
+
         // Check if sprinting and adjust speed
-        if (Input.GetKey(KeyCode.LeftShift) && playerStats.stamina > 0)
+        if (Input.GetKey(KeyCode.LeftShift) && playerData.Stamina > 0 && playerMovement != Vector3.zero)
         {
-            speed = playerStats.sprintSpeed;
+            speed = playerData.sprintSpeed;
             isSprinting = true;
-            playerStats.ReduceStamina(sprintStaminaCost);
+            playerData.ReduceStamina(sprintStaminaCost);
         }
         else
         {
-            speed = playerStats.walkSpeed;
+            speed = playerData.walkSpeed;
             isSprinting = false;
+            if (playerData.Stamina < playerData.maxStamina) playerData.AddStamina(playerData.staminaGain);
         }
 
         // Right click rottaion
@@ -104,13 +107,6 @@ public class PlayerController : MonoBehaviour
             PlayerVelocity.y = 0f;
         }
 
-        // Get horizontal and vertical player inputs
-
-        Vector3 playerMovement = new Vector3(
-            Input.GetAxis("Horizontal"),
-            0,
-            Input.GetAxis("Vertical")
-        );
 
         // Horizontal and Vertical Movement
 
@@ -129,5 +125,42 @@ public class PlayerController : MonoBehaviour
 
         if (affectedByGravity) PlayerVelocity.y += gravityValue * Time.deltaTime;
         playerControls.Move(PlayerVelocity * Time.deltaTime);
+
+        // pickup item
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            // get items in pickup range
+            Collider[] itemsInRange = Physics.OverlapSphere(transform.position, playerData.itemPickupRadius, LayerMask.GetMask("Item"));
+            if (itemsInRange.Length == 0 || itemsInRange == null) return;
+
+            // find closest item and add to inventory
+            GameObject closestItem = null;
+            float minDist = Mathf.Infinity;
+            foreach (Collider item in itemsInRange)
+            {
+                float curDist = Vector3.Distance(item.transform.position, transform.position);
+                if (curDist < minDist)
+                {
+                    minDist = curDist;
+                    closestItem = item.gameObject;
+                }
+            }
+            playerData.PickupItem(closestItem.GetComponent<ItemObject>().itemScript);
+            Destroy(closestItem);
+        }
+
+        // use item
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            // get the first item in inventroy and use it
+            // if the item is consumable
+            var firstItem = playerData.inventory[0];
+            if (firstItem is ConsumableItem)
+            {
+                ((ConsumableItem)firstItem).ConsumeItem();
+                playerData.inventory.RemoveAt(0);
+            }
+        }
     }
+
 }
