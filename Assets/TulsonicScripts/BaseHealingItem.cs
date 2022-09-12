@@ -12,5 +12,6 @@ public class BaseHealingItem : ConsumableItem
     {
         playerData.AddStamina(staminaEffect);
         playerData.Heal(healthEffect);
+        Debug.Log("used " + itemName);
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class SingletonScriptableObject<T> : ScriptableObject where T : SingletonScriptableObject<T>
 {
@@ -9,23 +10,29 @@ public class SingletonScriptableObject<T> : ScriptableObject where T : Singleton
     {
         get
         {
-            T[] instances = Resources.FindObjectsOfTypeAll<T>();
-            if (instances == null || instances.Length == 0)
+            if (instance == null)
             {
-                Debug.LogException(new System.Exception("No instance of singleton " + typeof(T).ToString() + " found but it's required."));
-                UnityEditor.EditorApplication.isPlaying = false;
-                return null;
+                string[] instanceStrings = AssetDatabase.FindAssets("t:" + typeof(T).Name);
+                if (instanceStrings == null || instanceStrings.Length == 0)
+                {
+                    Debug.LogException(new System.Exception("No instance of singleton " + typeof(T).ToString() + " found but it's required."));
+                    UnityEditor.EditorApplication.isPlaying = false;
+                    return null;
+                }
+                if (instanceStrings.Length > 1)
+                {
+                    Debug.LogException(new System.Exception("Multiple instances of singleton " + typeof(T).ToString() + " created."));
+                    UnityEditor.EditorApplication.isPlaying = false;
+                    return null;
+                }
+                else
+                {
+                    string instancePath = AssetDatabase.GUIDToAssetPath(instanceStrings[0]);
+                    instance = AssetDatabase.LoadAssetAtPath<T>(instancePath);
+                    return instance;
+                }
             }
-            if (instances.Length > 1)
-            {
-                Debug.LogException(new System.Exception("Multiple instances of singleton " + typeof(T).ToString() + " created."));
-                UnityEditor.EditorApplication.isPlaying = false;
-                return null;
-            }
-            else
-            {
-                return instances[0];
-            }
+            return instance;
         }
     }
 }

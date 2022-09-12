@@ -32,11 +32,6 @@ public class PlayerController : MonoBehaviour
 
     private float speed;
 
-    private void Awake()
-    {
-        playerData = PlayerData.Instance;
-    }
-
     private bool isGrounded()
     {
         RaycastHit hit;
@@ -56,6 +51,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerData = PlayerData.Instance;
         playerControls = GetComponent<CharacterController>();
         playerCamera.transform.parent = null;
     }
@@ -134,7 +130,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             // get items in pickup range
-            Collider[] itemsInRange = Physics.OverlapSphere(transform.position, playerData.itemPickupRadius, LayerMask.NameToLayer("Item"));
+            Collider[] itemsInRange = Physics.OverlapSphere(transform.position, playerData.itemPickupRadius, LayerMask.GetMask("Item"));
             if (itemsInRange.Length == 0 || itemsInRange == null) return;
 
             // find closest item and add to inventory
@@ -162,7 +158,9 @@ public class PlayerController : MonoBehaviour
             if (firstItem is ConsumableItem)
             {
                 ((ConsumableItem)firstItem).ConsumeItem();
+                playerData.inventory.RemoveAt(0);
             }
         }
     }
+
 }
