@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerStats))]
 public class PlayerController : MonoBehaviour
 {
+    private PlayerData playerData;
     private CharacterController playerControls;
     private Vector3 PlayerVelocity;
     private bool groundedPlayer;
@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        playerStats = GetComponent<PlayerStats>();
+        playerData = PlayerData.Instance;
     }
 
     private bool isGrounded()
@@ -76,6 +76,7 @@ public class PlayerController : MonoBehaviour
         {
             speed = playerStats.walkSpeed;
             isSprinting = false;
+            if (playerData.Stamina < playerData.maxStamina) playerData.AddStamina(playerData.staminaGain);
         }
 
         // Right click rottaion
