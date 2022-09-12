@@ -15,6 +15,10 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
     [HideInInspector] public float speed;
     public float staminaGain;
 
+    public float itemPickupRadius;
+
+    public List<ItemBase> inventory;
+
     #region gettersetters
     public float Health
     {
@@ -68,5 +72,9 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
         Stamina += sp;
     }
 
-
+    public void PickupItem(ItemBase item)
+    {
+        inventory.Add(item);
+        Debug.Log("picked up " + item.itemName);
+    }
 }

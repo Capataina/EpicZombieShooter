@@ -18,3 +18,5 @@ MonoBehaviour:
   sprintSpeed: 8
   speed: 0
   staminaGain: 0.01
+  itemPickupRadius: 15
+  inventory: []
