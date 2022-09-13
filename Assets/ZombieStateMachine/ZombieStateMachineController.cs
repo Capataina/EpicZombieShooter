@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class ZombieStateMachineController : MonoBehaviour
 {
     [HideInInspector]
-    public NavMeshAgent baseWander;
+    public NavMeshAgent zombieNavAgent;
 
     [HideInInspector]
     public ZombieCurrentState currentState;
@@ -26,21 +26,24 @@ public class ZombieStateMachineController : MonoBehaviour
     [SerializeField]
     public ZombieBaseDeathState deathState;
 
+    [SerializeField]
+    public GameObject thePlayer;
+
     void Awake()
     {
-        baseWander = GetComponent<NavMeshAgent>();
+        zombieNavAgent = GetComponent<NavMeshAgent>();
     }
 
     void Start()
     {
         currentState = idleState;
-
         currentState.EnterState(this);
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Debug.Log(currentState);
         currentState.UpdateState(this);
     }
 
