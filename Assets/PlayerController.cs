@@ -28,7 +28,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     float sprintStaminaCost;
 
-    [HideInInspector] public bool isSprinting;
+    [HideInInspector]
+    public bool isSprinting;
 
     private float speed;
 
@@ -68,7 +69,11 @@ public class PlayerController : MonoBehaviour
         );
 
         // Check if sprinting and adjust speed
-        if (Input.GetKey(KeyCode.LeftShift) && playerData.Stamina > 0 && playerMovement != Vector3.zero)
+        if (
+            Input.GetKey(KeyCode.LeftShift)
+            && playerData.Stamina > 0
+            && playerMovement != Vector3.zero
+        )
         {
             speed = playerData.sprintSpeed;
             isSprinting = true;
@@ -78,7 +83,8 @@ public class PlayerController : MonoBehaviour
         {
             speed = playerData.walkSpeed;
             isSprinting = false;
-            if (playerData.Stamina < playerData.maxStamina) playerData.AddStamina(playerData.staminaGain);
+            if (playerData.Stamina < playerData.maxStamina)
+                playerData.AddStamina(playerData.staminaGain);
         }
 
         // Right click rottaion
@@ -95,7 +101,15 @@ public class PlayerController : MonoBehaviour
             Vector3 rotationDirection = rotaionTarget - transform.position;
             float playerRotation =
                 Mathf.Atan2(rotationDirection.x, rotationDirection.z) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(0, playerRotation, 0);
+
+            Quaternion desiredRotation = Quaternion.Euler(0, playerRotation, 0);
+            transform.rotation = Quaternion.Lerp(
+                transform.rotation,
+                desiredRotation,
+                Time.deltaTime * rotationSpeed
+            );
+
+            // transform.rotation = Quaternion.Euler(0, playerRotation, 0);
         }
 
         // is player grounded
@@ -107,7 +121,6 @@ public class PlayerController : MonoBehaviour
             PlayerVelocity.y = 0f;
         }
 
-
         // Horizontal and Vertical Movement
 
         playerControls.Move(playerMovement * Time.deltaTime * speed);
@@ -115,7 +128,11 @@ public class PlayerController : MonoBehaviour
         if (playerMovement != Vector3.zero && !Input.GetMouseButton(1))
         {
             Quaternion newPlayerRotation = Quaternion.LookRotation(playerMovement, Vector3.up);
-            transform.rotation = Quaternion.Lerp(transform.rotation, newPlayerRotation, Time.deltaTime * rotationSpeed);
+            transform.rotation = Quaternion.Lerp(
+                transform.rotation,
+                newPlayerRotation,
+                Time.deltaTime * rotationSpeed
+            );
         }
 
         if (Input.GetButtonDown("Jump") && groundedPlayer)
@@ -123,15 +140,21 @@ public class PlayerController : MonoBehaviour
             PlayerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
         }
 
-        if (affectedByGravity) PlayerVelocity.y += gravityValue * Time.deltaTime;
+        if (affectedByGravity)
+            PlayerVelocity.y += gravityValue * Time.deltaTime;
         playerControls.Move(PlayerVelocity * Time.deltaTime);
 
         // pickup item
         if (Input.GetKeyDown(KeyCode.E))
         {
             // get items in pickup range
-            Collider[] itemsInRange = Physics.OverlapSphere(transform.position, playerData.itemPickupRadius, LayerMask.GetMask("Item"));
-            if (itemsInRange.Length == 0 || itemsInRange == null) return;
+            Collider[] itemsInRange = Physics.OverlapSphere(
+                transform.position,
+                playerData.itemPickupRadius,
+                LayerMask.GetMask("Item")
+            );
+            if (itemsInRange.Length == 0 || itemsInRange == null)
+                return;
 
             // find closest item and add to inventory
             GameObject closestItem = null;
@@ -162,5 +185,4 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
 }

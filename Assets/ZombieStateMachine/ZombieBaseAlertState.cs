@@ -43,6 +43,8 @@ public class ZombieBaseAlertState : ZombieCurrentState
 
     public override void EnterState(ZombieStateMachineController zombie)
     {
+        zombie.zombieNavAgent.acceleration = 8;
+        zombie.zombieNavAgent.speed = 4.5f;
         Debug.Log("Entered Alert State!");
     }
 

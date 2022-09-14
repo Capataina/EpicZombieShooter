@@ -44,7 +44,6 @@ public class ZombieStateMachineController : MonoBehaviour
         currentState.EnterState(this);
     }
 
-    // Update is called once per frame
     void Update()
     {
         // Debug.Log(currentState);
