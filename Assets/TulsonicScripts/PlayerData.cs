@@ -6,6 +6,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PlayerData", menuName = "PlayerData")]
 public class PlayerData : SingletonScriptableObject<PlayerData>
 {
+
+    public enum EquipableSlots {
+        PrimaryWeapons,
+        SecondaryWeapon,
+    }
+
     public float maxHealth = 50;
     private float health;
     public float maxStamina = 50;

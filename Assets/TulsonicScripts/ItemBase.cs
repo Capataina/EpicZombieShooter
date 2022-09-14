@@ -8,7 +8,7 @@ public class ItemBase : ScriptableObject
     [SerializeField] public string itemName;
     [SerializeField] public GameObject itemModel;
     [SerializeField] public Sprite itemIcon;
-    protected PlayerData playerData;
+    protected static PlayerData playerData;
 
     private void OnEnable()
     {
