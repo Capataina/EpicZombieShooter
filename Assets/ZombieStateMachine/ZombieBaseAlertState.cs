@@ -5,10 +5,26 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "StateMachine/Zombie/BaseStates/Alert")]
 public class ZombieBaseAlertState : ZombieCurrentState
 {
-    private bool isAlerted;
     private float playerToZombieDistance;
 
-    private void determineIfAlerted(ZombieStateMachineController zombie)
+    private bool InMeleeRange(ZombieStateMachineController zombie)
+    {
+        playerToZombieDistance = Vector3.Distance(
+            zombie.thePlayer.transform.position,
+            zombie.transform.position
+        );
+
+        if (playerToZombieDistance <= 2)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private bool isAlerted(ZombieStateMachineController zombie)
     {
         playerToZombieDistance = Vector3.Distance(
             zombie.thePlayer.transform.position,
@@ -17,27 +33,38 @@ public class ZombieBaseAlertState : ZombieCurrentState
 
         if (playerToZombieDistance <= 15)
         {
-            isAlerted = true;
+            return true;
         }
         else
         {
-            isAlerted = false;
+            return false;
         }
     }
 
-    public override void EnterState(ZombieStateMachineController zombie) { }
+    public override void EnterState(ZombieStateMachineController zombie)
+    {
+        Debug.Log("Entered Alert State!");
+    }
 
     public override void UpdateState(ZombieStateMachineController zombie)
     {
-        determineIfAlerted(zombie);
+        isAlerted(zombie);
+        InMeleeRange(zombie);
 
-        if (isAlerted)
+        if (InMeleeRange(zombie))
         {
-            zombie.zombieNavAgent.destination = zombie.thePlayer.transform.position;
+            zombie.SwitchState(zombie.attackState);
         }
         else
         {
-            zombie.SwitchState(zombie.idleState);
+            if (isAlerted(zombie))
+            {
+                zombie.zombieNavAgent.destination = zombie.thePlayer.transform.position;
+            }
+            else
+            {
+                zombie.SwitchState(zombie.idleState);
+            }
         }
     }
 }

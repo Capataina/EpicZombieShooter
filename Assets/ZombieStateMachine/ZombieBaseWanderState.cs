@@ -8,7 +8,6 @@ public class ZombieBaseWanderState : ZombieCurrentState
     public float wanderChance = 100;
     public float timesWandered = 0;
     private float randomPercentage = 0;
-    private bool isAlerted;
     private float playerToZombieDistance;
     private float zombieDestinationDistance;
     private Vector3 newPos;
@@ -36,7 +35,7 @@ public class ZombieBaseWanderState : ZombieCurrentState
         );
     }
 
-    private void determineIfAlerted(ZombieStateMachineController zombie)
+    private bool isAlerted(ZombieStateMachineController zombie)
     {
         playerToZombieDistance = Vector3.Distance(
             zombie.thePlayer.transform.position,
@@ -45,11 +44,11 @@ public class ZombieBaseWanderState : ZombieCurrentState
 
         if (playerToZombieDistance <= 15)
         {
-            isAlerted = true;
+            return true;
         }
         else
         {
-            isAlerted = false;
+            return false;
         }
     }
 
@@ -84,13 +83,13 @@ public class ZombieBaseWanderState : ZombieCurrentState
 
     public override void UpdateState(ZombieStateMachineController zombie)
     {
-        determineIfAlerted(zombie);
+        isAlerted(zombie);
         getDistance(zombie);
         StaticCheck(zombie);
 
         // Debug.Log((zombieDestinationDistance, zombie.transform.position, newPos));
 
-        if (isAlerted)
+        if (isAlerted(zombie))
         {
             zombie.SwitchState(zombie.alertState);
         }
