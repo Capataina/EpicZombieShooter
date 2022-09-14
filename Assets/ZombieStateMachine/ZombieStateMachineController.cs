@@ -11,6 +11,9 @@ public class ZombieStateMachineController : MonoBehaviour
     [HideInInspector]
     public ZombieCurrentState currentState;
 
+    [HideInInspector]
+    public PlayerData playerData;
+
     [SerializeField]
     public ZombieBaseIdleState idleState;
 
@@ -32,6 +35,7 @@ public class ZombieStateMachineController : MonoBehaviour
     void Awake()
     {
         zombieNavAgent = GetComponent<NavMeshAgent>();
+        playerData = PlayerData.Instance;
     }
 
     void Start()
