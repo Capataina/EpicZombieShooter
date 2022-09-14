@@ -6,7 +6,6 @@ using UnityEngine;
 public class ZombieBaseIdleState : ZombieCurrentState
 {
     private float timeToSwitch = 5;
-
     private float stateSwitchTimer = 0;
     private float playerToZombieDistance;
 
@@ -35,6 +34,12 @@ public class ZombieBaseIdleState : ZombieCurrentState
     public override void UpdateState(ZombieStateMachineController zombie)
     {
         isAlerted(zombie);
+
+        while (zombie.zombieNavAgent.speed >= 0.1f)
+        {
+            zombie.zombieNavAgent.speed -= 0.05f;
+        }
+
         if (isAlerted(zombie))
         {
             zombie.SwitchState(zombie.alertState);

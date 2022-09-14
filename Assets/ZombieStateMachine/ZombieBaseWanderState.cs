@@ -70,19 +70,32 @@ public class ZombieBaseWanderState : ZombieCurrentState
         newPos = RandomNavSphere(zombie.transform.position, wanderRadius, NavMesh.AllAreas);
         zombie.zombieNavAgent.destination = newPos;
         timesWandered += 1;
-        wanderChance = (100 - (timesWandered * 10));
+        wanderChance = (100 - (timesWandered * 15));
         Debug.Log(wanderChance);
         randomPercentage = Random.Range(0, 100);
     }
 
     public override void EnterState(ZombieStateMachineController zombie)
     {
+        timesWandered = 0;
+        wanderChance = 100;
+        zombie.zombieNavAgent.acceleration = 3;
+        zombie.zombieNavAgent.speed = 1.5f;
         Wander(zombie);
         Debug.Log("Entered wandering state!");
     }
 
     public override void UpdateState(ZombieStateMachineController zombie)
     {
+        // Debug.Log(
+        //     (
+        //         zombie.zombieNavAgent.speed,
+        //         zombie.zombieNavAgent.acceleration,
+        //         zombie.zombieNavAgent.velocity,
+        //         zombie.zombieNavAgent.velocity.magnitude
+        //     )
+        // );
+
         isAlerted(zombie);
         getDistance(zombie);
         StaticCheck(zombie);
