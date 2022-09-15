@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Projectile Weapon", menuName = "Items/Projectile Weapon")]
 public class ProjectileWeaponItems : EquipableItems
 {
-    [SerializeField] float damage;
-    [SerializeField] float cooldown;
-    [SerializeField] bool isAutomatic;
+    public float damage;
+    public float cooldown;
+    public bool isAutomatic;
 }
