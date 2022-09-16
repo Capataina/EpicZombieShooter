@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class EquipableItems : ItemBase
 {
-    [SerializeField] protected PlayerData.EquipableSlots inventorySlot;
+    [SerializeField] protected PlayerData.EquipmentSlots inventorySlot;
 }
