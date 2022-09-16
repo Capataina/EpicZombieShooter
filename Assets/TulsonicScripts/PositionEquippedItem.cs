@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ManageEquippedItem : MonoBehaviour
+public class PositionEquippedItem : MonoBehaviour
 {
 
     [SerializeField] GameObject equippedWeaponPosition;
@@ -33,3 +33,4 @@ public class ManageEquippedItem : MonoBehaviour
         GetComponent<WeasponShooting>().Initialize(item);
     }
 }
+

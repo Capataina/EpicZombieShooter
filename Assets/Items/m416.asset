@@ -18,5 +18,5 @@ MonoBehaviour:
   itemIcon: {fileID: 0}
   inventorySlot: 0
   damage: 20
-  cooldown: 1
+  cooldown: 0.1
   isAutomatic: 1
