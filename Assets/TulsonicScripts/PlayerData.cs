@@ -1,10 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "PlayerData", menuName = "PlayerData")]
 public class PlayerData : SingletonScriptableObject<PlayerData>
 {
+
+
+    public enum EquipableSlots
+    {
+        PrimaryWeapons,
+        SecondaryWeapon,
+    }
+
+    public ItemBase equippedItem;
+
     public enum PlayerStates
     {
         Idle,
@@ -14,6 +25,7 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
     }
 
     public PlayerStates states;
+
 
     public float maxHealth = 50;
     private float health;
@@ -25,10 +37,11 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
     [HideInInspector]
     public float speed;
     public float staminaGain;
-
     public float itemPickupRadius;
 
     public List<ItemBase> inventory;
+
+    public UnityEvent<ItemBase> itemEquippedEvent;
 
     #region gettersetters
     public float Health
@@ -45,10 +58,11 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
 
     #endregion
 
-    private void Awake()
+    private void OnEnable()
     {
         Health = maxHealth;
         Stamina = maxStamina;
+        itemEquippedEvent ??= new UnityEvent<ItemBase>();
     }
 
     public void TakeDamage(float dmg)
@@ -73,7 +87,23 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
 
     public void PickupItem(ItemBase item)
     {
-        inventory.Add(item);
-        Debug.Log("picked up " + item.itemName);
+        // TODO needs to be changed
+        if (item is not ProjectileWeaponItems)
+        {
+            inventory.Add(item);
+            Debug.Log("picked up " + item.itemName);
+        }
+        else
+        {
+            EquipItem(item);
+            Debug.Log("equipped " + item.itemName);
+        }
+    }
+
+    public void EquipItem(ItemBase item)
+    {
+        // TODO needs to be changed
+        equippedItem = item;
+        itemEquippedEvent.Invoke(item);
     }
 }
