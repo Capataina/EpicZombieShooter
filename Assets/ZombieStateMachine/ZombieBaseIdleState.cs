@@ -6,13 +6,10 @@ using UnityEngine;
 public class ZombieBaseIdleState : ZombieCurrentState
 {
     private float timeToSwitch = 5;
-
     private float stateSwitchTimer = 0;
-
-    private bool isAlerted;
     private float playerToZombieDistance;
 
-    private void determineIfAlerted(ZombieStateMachineController zombie)
+    private bool isAlerted(ZombieStateMachineController zombie)
     {
         playerToZombieDistance = Vector3.Distance(
             zombie.thePlayer.transform.position,
@@ -21,11 +18,11 @@ public class ZombieBaseIdleState : ZombieCurrentState
 
         if (playerToZombieDistance <= 15)
         {
-            isAlerted = true;
+            return true;
         }
         else
         {
-            isAlerted = false;
+            return false;
         }
     }
 
@@ -36,8 +33,14 @@ public class ZombieBaseIdleState : ZombieCurrentState
 
     public override void UpdateState(ZombieStateMachineController zombie)
     {
-        determineIfAlerted(zombie);
-        if (isAlerted)
+        isAlerted(zombie);
+
+        while (zombie.zombieNavAgent.speed >= 0.1f)
+        {
+            zombie.zombieNavAgent.speed -= 0.05f;
+        }
+
+        if (isAlerted(zombie))
         {
             zombie.SwitchState(zombie.alertState);
         }

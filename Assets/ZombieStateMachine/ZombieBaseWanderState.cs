@@ -8,7 +8,6 @@ public class ZombieBaseWanderState : ZombieCurrentState
     public float wanderChance = 100;
     public float timesWandered = 0;
     private float randomPercentage = 0;
-    private bool isAlerted;
     private float playerToZombieDistance;
     private float zombieDestinationDistance;
     private Vector3 newPos;
@@ -36,7 +35,7 @@ public class ZombieBaseWanderState : ZombieCurrentState
         );
     }
 
-    private void determineIfAlerted(ZombieStateMachineController zombie)
+    private bool isAlerted(ZombieStateMachineController zombie)
     {
         playerToZombieDistance = Vector3.Distance(
             zombie.thePlayer.transform.position,
@@ -45,11 +44,11 @@ public class ZombieBaseWanderState : ZombieCurrentState
 
         if (playerToZombieDistance <= 15)
         {
-            isAlerted = true;
+            return true;
         }
         else
         {
-            isAlerted = false;
+            return false;
         }
     }
 
@@ -71,26 +70,39 @@ public class ZombieBaseWanderState : ZombieCurrentState
         newPos = RandomNavSphere(zombie.transform.position, wanderRadius, NavMesh.AllAreas);
         zombie.zombieNavAgent.destination = newPos;
         timesWandered += 1;
-        wanderChance = (100 - (timesWandered * 10));
+        wanderChance = (100 - (timesWandered * 15));
         Debug.Log(wanderChance);
         randomPercentage = Random.Range(0, 100);
     }
 
     public override void EnterState(ZombieStateMachineController zombie)
     {
+        timesWandered = 0;
+        wanderChance = 100;
+        zombie.zombieNavAgent.acceleration = 3;
+        zombie.zombieNavAgent.speed = 1.5f;
         Wander(zombie);
         Debug.Log("Entered wandering state!");
     }
 
     public override void UpdateState(ZombieStateMachineController zombie)
     {
-        determineIfAlerted(zombie);
+        // Debug.Log(
+        //     (
+        //         zombie.zombieNavAgent.speed,
+        //         zombie.zombieNavAgent.acceleration,
+        //         zombie.zombieNavAgent.velocity,
+        //         zombie.zombieNavAgent.velocity.magnitude
+        //     )
+        // );
+
+        isAlerted(zombie);
         getDistance(zombie);
         StaticCheck(zombie);
 
         // Debug.Log((zombieDestinationDistance, zombie.transform.position, newPos));
 
-        if (isAlerted)
+        if (isAlerted(zombie))
         {
             zombie.SwitchState(zombie.alertState);
         }

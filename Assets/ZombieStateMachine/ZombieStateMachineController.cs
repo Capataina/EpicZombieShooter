@@ -11,6 +11,9 @@ public class ZombieStateMachineController : MonoBehaviour
     [HideInInspector]
     public ZombieCurrentState currentState;
 
+    [HideInInspector]
+    public PlayerData playerData;
+
     [SerializeField]
     public ZombieBaseIdleState idleState;
 
@@ -32,6 +35,7 @@ public class ZombieStateMachineController : MonoBehaviour
     void Awake()
     {
         zombieNavAgent = GetComponent<NavMeshAgent>();
+        playerData = PlayerData.Instance;
     }
 
     void Start()
@@ -40,7 +44,6 @@ public class ZombieStateMachineController : MonoBehaviour
         currentState.EnterState(this);
     }
 
-    // Update is called once per frame
     void Update()
     {
         // Debug.Log(currentState);
