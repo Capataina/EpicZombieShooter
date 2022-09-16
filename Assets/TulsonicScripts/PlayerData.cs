@@ -6,7 +6,7 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "PlayerData", menuName = "PlayerData")]
 public class PlayerData : SingletonScriptableObject<PlayerData>
 {
-    public enum EquipableSlots
+    public enum EquipmentSlots
     {
         PrimaryWeapons,
         SecondaryWeapon,
