@@ -6,12 +6,15 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "PlayerData", menuName = "PlayerData")]
 public class PlayerData : SingletonScriptableObject<PlayerData>
 {
-
-
     public enum EquipableSlots
     {
         PrimaryWeapons,
         SecondaryWeapon,
+        Head,
+        Body,
+        Legs,
+        Feet,
+        BackPack
     }
 
     public ItemBase equippedItem;
@@ -25,7 +28,6 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
     }
 
     public PlayerStates states;
-
 
     public float maxHealth = 50;
     private float health;
