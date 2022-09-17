@@ -1392,11 +1392,6 @@ Transform:
   m_Father: {fileID: 410909754}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!20 &1430711355 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 963194227, guid: 602e107f16ba09c4ca37abe07813c19d, type: 3}
-  m_PrefabInstance: {fileID: 896335781}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1499549992
 GameObject:
   m_ObjectHideFlags: 0
@@ -1796,10 +1791,6 @@ PrefabInstance:
       propertyPath: thePlayer
       value: 
       objectReference: {fileID: 896335782}
-    - target: {fileID: 625366731, guid: 6028ee048f87ebf49bf4518a1bf817ef, type: 3}
-      propertyPath: PerspectiveCamera
-      value: 
-      objectReference: {fileID: 1430711355}
     - target: {fileID: 7436335366242292178, guid: 6028ee048f87ebf49bf4518a1bf817ef, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -1848,12 +1839,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: Walker_zombie
       objectReference: {fileID: 0}
-    - target: {fileID: 7436335366242292190, guid: 6028ee048f87ebf49bf4518a1bf817ef, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 625366731, guid: 6028ee048f87ebf49bf4518a1bf817ef, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6028ee048f87ebf49bf4518a1bf817ef, type: 3}
 --- !u!1 &919132149117847150 stripped
 GameObject:
