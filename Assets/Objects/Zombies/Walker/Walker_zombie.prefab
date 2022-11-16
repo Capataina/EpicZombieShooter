@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7436335366242292191}
   - component: {fileID: 221768434391078996}
   - component: {fileID: 320251866}
+  - component: {fileID: 3946816678028478555}
   m_Layer: 0
   m_Name: Walker_zombie
   m_TagString: Untagged
@@ -133,10 +134,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd310c04eec68b5419a25f01a2a22f90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseWander: {fileID: 221768434391078996}
+  zombieNavAgent: {fileID: 0}
   currentState: {fileID: 0}
+  playerData: {fileID: 0}
   idleState: {fileID: 11400000, guid: 6b3c6d993c812f644af147f5a4b426d9, type: 2}
   wanderState: {fileID: 11400000, guid: 30cfb4d2fe580b342b7233b4ee59b359, type: 2}
   alertState: {fileID: 11400000, guid: 7a8edf28ca5533b4fab58e836b1d83d2, type: 2}
   attackState: {fileID: 11400000, guid: 0fe5414552ad64d41a47eb480dbb5237, type: 2}
   deathState: {fileID: 11400000, guid: ccfe99ce53d61574481bf87a6ada23ea, type: 2}
+  thePlayer: {fileID: 0}
+--- !u!114 &3946816678028478555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7436335366242292190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9bc5c64eee723e55bff5f2aea197516, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zombieData: {fileID: 11400000, guid: da6293e66359e4592bec97289d2ef3cf, type: 2}

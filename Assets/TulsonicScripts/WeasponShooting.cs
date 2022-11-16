@@ -50,7 +50,11 @@ public class WeasponShooting : MonoBehaviour
 
         if (Physics.Raycast(transform.position, transform.forward, out hit, 100, LayerMask.GetMask("Default")))
         {
-            Debug.Log("hit " + hit.transform.gameObject.name + " at " + hit.point);
+            Zombie zombie = hit.transform.gameObject.GetComponent<Zombie>();
+            if (zombie != null)
+            {
+                zombie.TakeDamage(weapon.damage);
+            }
         }
 
         cooldownTimer = weapon.cooldown;
