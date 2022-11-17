@@ -184,6 +184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activeGrid: {fileID: 0}
+  heldItem: {fileID: 0}
 --- !u!1 &6212643344659989414
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,7 +199,7 @@ GameObject:
   - component: {fileID: 392462587}
   - component: {fileID: 392462588}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -221,8 +222,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 356, y: -189}
-  m_SizeDelta: {x: 640, y: 256}
+  m_AnchoredPosition: {x: 722, y: -188}
+  m_SizeDelta: {x: 384, y: 384}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &6212643344659989411
 CanvasRenderer:
@@ -274,9 +275,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9428b90839fd5b49b9f052b8a5b0f829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventoryGridWidth: 0
-  inventoryGridHeight: 0
-  itemToAdd: {fileID: 0}
+  inventoryGridWidth: 6
+  inventoryGridHeight: 6
+  itemToAddSmall: {fileID: 11400000, guid: 9e9420d2a728ca87eae0e3668cebfc1f, type: 2}
+  itemToAddBig: {fileID: 11400000, guid: e953cf8e74f9012a185f89c858ebb67f, type: 2}
+  itemToAddHorizontal: {fileID: 11400000, guid: 2d7812d89b1edbf6fa6393cc935f702f, type: 2}
+  inventoryItemPrefab: {fileID: 370530562591703663, guid: c59e58c85cf5a255ab07e68b0c3322cf, type: 3}
 --- !u!114 &392462588
 MonoBehaviour:
   m_ObjectHideFlags: 0

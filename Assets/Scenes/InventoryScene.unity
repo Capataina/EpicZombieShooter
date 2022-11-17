@@ -308,34 +308,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 392462587, guid: f2ae3162ad1d2bc91ba5f652a7163ecf, type: 3}
-      propertyPath: itemToAdd
-      value: 
-      objectReference: {fileID: 11400000, guid: 9e9420d2a728ca87eae0e3668cebfc1f, type: 2}
-    - target: {fileID: 392462587, guid: f2ae3162ad1d2bc91ba5f652a7163ecf, type: 3}
-      propertyPath: itemToAddBig
-      value: 
-      objectReference: {fileID: 11400000, guid: e953cf8e74f9012a185f89c858ebb67f, type: 2}
-    - target: {fileID: 392462587, guid: f2ae3162ad1d2bc91ba5f652a7163ecf, type: 3}
-      propertyPath: itemToAddSmall
-      value: 
-      objectReference: {fileID: 11400000, guid: 9e9420d2a728ca87eae0e3668cebfc1f, type: 2}
-    - target: {fileID: 392462587, guid: f2ae3162ad1d2bc91ba5f652a7163ecf, type: 3}
-      propertyPath: inventoryGridWidth
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 392462587, guid: f2ae3162ad1d2bc91ba5f652a7163ecf, type: 3}
-      propertyPath: inventoryGridHeight
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 392462587, guid: f2ae3162ad1d2bc91ba5f652a7163ecf, type: 3}
-      propertyPath: inventoryItemPrefab
-      value: 
-      objectReference: {fileID: 370530562591703663, guid: c59e58c85cf5a255ab07e68b0c3322cf, type: 3}
-    - target: {fileID: 392462587, guid: f2ae3162ad1d2bc91ba5f652a7163ecf, type: 3}
-      propertyPath: itemToAddHorizontal
-      value: 
-      objectReference: {fileID: 11400000, guid: 2d7812d89b1edbf6fa6393cc935f702f, type: 2}
     - target: {fileID: 6212643344260435168, guid: f2ae3162ad1d2bc91ba5f652a7163ecf, type: 3}
       propertyPath: m_Name
       value: Inventory
@@ -423,10 +395,6 @@ PrefabInstance:
     - target: {fileID: 6212643344260435196, guid: f2ae3162ad1d2bc91ba5f652a7163ecf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6212643344659989414, guid: f2ae3162ad1d2bc91ba5f652a7163ecf, type: 3}
-      propertyPath: m_Name
-      value: Grid
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f2ae3162ad1d2bc91ba5f652a7163ecf, type: 3}

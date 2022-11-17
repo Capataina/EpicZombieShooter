@@ -23,9 +23,9 @@ public class ItemGrid : MonoBehaviour
         rectTransform = GetComponent<RectTransform>();
         Init();
 
-        InstansiateItem(itemToAddSmall, 1, 1);
-        InstansiateItem(itemToAddBig, 3, 1);
-        InstansiateItem(itemToAddHorizontal, 5, 1);
+        //InstansiateItem(itemToAddSmall, 1, 1);
+        //InstansiateItem(itemToAddBig, 3, 1);
+        InstansiateItem(itemToAddHorizontal, 0, 0);
     }
 
     private void InstansiateItem(ItemBase item, int posX, int posY)
@@ -101,10 +101,21 @@ public class ItemGrid : MonoBehaviour
     public Vector2Int GetGridTopLeftCornerMouse(InventoryItem item)
     {
         RectTransform rectTransform = item.GetComponent<RectTransform>();
-        Vector2 pivotPosition = new Vector2(
-            Input.mousePosition.x - rectTransform.sizeDelta.x / 2 + tileSize / 2,
-            Input.mousePosition.y + rectTransform.sizeDelta.y / 2 - tileSize / 2
-        );
+        Vector2 pivotPosition;
+        if (item.rotated)
+        {
+            pivotPosition = new Vector2(
+                Input.mousePosition.x - rectTransform.sizeDelta.y / 2 + tileSize / 2,
+                Input.mousePosition.y + rectTransform.sizeDelta.x / 2 - tileSize / 2
+            );
+        }
+        else
+        {
+            pivotPosition = new Vector2(
+                Input.mousePosition.x - rectTransform.sizeDelta.x / 2 + tileSize / 2,
+                Input.mousePosition.y + rectTransform.sizeDelta.y / 2 - tileSize / 2
+            );
+        }
         return GetTileGridPosition(pivotPosition);
     }
 
@@ -115,7 +126,7 @@ public class ItemGrid : MonoBehaviour
         AddItem(item, currentGrid.x, currentGrid.y);
     }
 
-    public bool CheckOverlapAtMousePosition(InventoryItem item)
+    public bool CheckOverlapAndOverflowAtMousePosition(InventoryItem item)
     {
         Vector2Int pos = GetGridTopLeftCornerMouse(item);
 
@@ -125,8 +136,6 @@ public class ItemGrid : MonoBehaviour
         {
             return true;
         }
-
-        print((pos.x + item.width, pos.y + item.height));
 
         for (int i = pos.x; i < pos.x + item.width; i++)
         {

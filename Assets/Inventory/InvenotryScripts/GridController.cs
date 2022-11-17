@@ -7,6 +7,10 @@ public class GridController : MonoBehaviour
 
     Vector2Int lastPosition;
     ItemGrid lastActiveGrid;
+    int lastHeight;
+    int lastWidth;
+    bool wasRotated;
+    Vector2 lastPivot;
 
     private void Update()
     {
@@ -18,13 +22,15 @@ public class GridController : MonoBehaviour
             heldItem.height = t;
 
             RectTransform rectTransform = heldItem.GetComponent<RectTransform>();
-            if (rectTransform.localRotation == Quaternion.identity)
+            if (!heldItem.rotated)
             {
                 rectTransform.localRotation = Quaternion.Euler(0, 0, -90);
+                heldItem.rotated = true;
             }
             else
             {
                 rectTransform.localRotation = Quaternion.identity;
+                heldItem.rotated = false;
             }
         }
 
@@ -32,21 +38,27 @@ public class GridController : MonoBehaviour
         {
             if (activeGrid == null)
             {
-                print("no grid");
-                lastActiveGrid.AddItem(heldItem, lastPosition.x, lastPosition.y);
+                PlaceToPreviousPos();
             }
             else
             {
-                heldItem.GetComponent<RectTransform>().pivot = new Vector2(0, 1f);
-                if (!activeGrid.CheckOverlapAtMousePosition(heldItem))
+                Vector2 newPivot;
+                if (heldItem.rotated)
                 {
-                    print("overlap");
+                    newPivot = new Vector2(0, 0);
+                }
+                else
+                {
+                    newPivot = new Vector2(0, 1);
+                }
+                heldItem.GetComponent<RectTransform>().pivot = newPivot;
+                if (!activeGrid.CheckOverlapAndOverflowAtMousePosition(heldItem))
+                {
                     activeGrid.AddItemToMousePosition(heldItem);
                 }
                 else
                 {
-                    print("placing");
-                    lastActiveGrid.AddItem(heldItem, lastPosition.x, lastPosition.y);
+                    PlaceToPreviousPos();
                 }
             }
             heldItem = null;
@@ -59,8 +71,13 @@ public class GridController : MonoBehaviour
             if (heldItem != null)
             {
                 heldItem.GetComponent<RectTransform>().SetAsLastSibling();
+                lastPivot = heldItem.GetComponent<RectTransform>().pivot;
                 heldItem.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0.5f);
+                heldItem.GetComponent<RectTransform>().SetParent(GetComponent<RectTransform>());
                 lastPosition = activeGrid.GetGridTopLeftCorner(heldItem);
+                lastHeight = heldItem.height;
+                lastWidth = heldItem.width;
+                wasRotated = heldItem.rotated;
                 lastActiveGrid = activeGrid;
                 activeGrid.RemoveItem(heldItem, lastPosition.x, lastPosition.y);
             }
@@ -76,5 +93,22 @@ public class GridController : MonoBehaviour
     {
         RectTransform itemTransform = heldItem.GetComponent<RectTransform>();
         itemTransform.position = Input.mousePosition;
+    }
+
+    private void PlaceToPreviousPos()
+    {
+        if (wasRotated)
+        {
+            heldItem.GetComponent<RectTransform>().localRotation = Quaternion.Euler(0, 0, -90);
+        }
+        else
+        {
+            heldItem.GetComponent<RectTransform>().localRotation = Quaternion.identity;
+        }
+        heldItem.rotated = wasRotated;
+        heldItem.GetComponent<RectTransform>().pivot = lastPivot;
+        heldItem.width = lastWidth;
+        heldItem.height = lastHeight;
+        lastActiveGrid.AddItem(heldItem, lastPosition.x, lastPosition.y);
     }
 }

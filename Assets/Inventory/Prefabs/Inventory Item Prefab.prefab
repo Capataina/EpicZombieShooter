@@ -91,3 +91,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 0
   height: 0
+  rotated: 0
