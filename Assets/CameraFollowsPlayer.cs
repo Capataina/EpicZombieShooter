@@ -16,7 +16,7 @@ public class CameraFollowsPlayer : MonoBehaviour
         offset = transform.position - target.position;
     }
 
-    void LateUpdate()
+    void Update()
     {
         transform.position = Vector3.SmoothDamp(transform.position, target.position + offset, ref cameraVelocity, smoothing);
     }

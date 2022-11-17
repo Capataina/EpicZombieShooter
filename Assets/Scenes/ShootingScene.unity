@@ -1942,6 +1942,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Inventory
       objectReference: {fileID: 0}
+    - target: {fileID: 6212643344260435168, guid: f2ae3162ad1d2bc91ba5f652a7163ecf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6212643344260435196, guid: f2ae3162ad1d2bc91ba5f652a7163ecf, type: 3}
       propertyPath: m_Pivot.x
       value: 0

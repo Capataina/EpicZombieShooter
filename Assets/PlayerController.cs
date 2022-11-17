@@ -63,10 +63,10 @@ public class PlayerController : MonoBehaviour
         // Get horizontal and vertical player inputs
 
         Vector3 playerMovement = new Vector3(
-            Input.GetAxis("Horizontal"),
+            Input.GetAxisRaw("Horizontal"),
             0,
-            Input.GetAxis("Vertical")
-        );
+            Input.GetAxisRaw("Vertical")
+        ).normalized;
 
         // Check if sprinting and adjust speed
         if (
@@ -108,8 +108,6 @@ public class PlayerController : MonoBehaviour
                 desiredRotation,
                 Time.deltaTime * rotationSpeed
             );
-
-            // transform.rotation = Quaternion.Euler(0, playerRotation, 0);
         }
 
         // is player grounded
