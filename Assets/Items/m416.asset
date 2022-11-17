@@ -15,7 +15,9 @@ MonoBehaviour:
   itemId: 1
   itemName: M416
   itemModel: {fileID: 6107928768183127635, guid: 48d9e34a45a76e1ae9c523ea592425bd, type: 3}
-  itemIcon: {fileID: 0}
+  itemIcon: {fileID: 21300000, guid: 2834ee4e0e393e45db98e1050e33289b, type: 3}
+  inventoryWidth: 4
+  inventoryHeight: 2
   inventorySlot: 0
   damage: 20
   cooldown: 0.1

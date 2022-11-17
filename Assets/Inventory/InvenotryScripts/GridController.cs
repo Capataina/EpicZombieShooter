@@ -17,21 +17,7 @@ public class GridController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R) && heldItem != null)
         {
-            int t = heldItem.width;
-            heldItem.width = heldItem.height;
-            heldItem.height = t;
-
-            RectTransform rectTransform = heldItem.GetComponent<RectTransform>();
-            if (!heldItem.rotated)
-            {
-                rectTransform.localRotation = Quaternion.Euler(0, 0, -90);
-                heldItem.rotated = true;
-            }
-            else
-            {
-                rectTransform.localRotation = Quaternion.identity;
-                heldItem.rotated = false;
-            }
+            heldItem.ToggleRotation();
         }
 
         if (Input.GetMouseButtonUp(0) && heldItem != null)
@@ -42,16 +28,7 @@ public class GridController : MonoBehaviour
             }
             else
             {
-                Vector2 newPivot;
-                if (heldItem.rotated)
-                {
-                    newPivot = new Vector2(0, 0);
-                }
-                else
-                {
-                    newPivot = new Vector2(0, 1);
-                }
-                heldItem.GetComponent<RectTransform>().pivot = newPivot;
+                heldItem.CorrectPivot();
                 if (!activeGrid.CheckOverlapAndOverflowAtMousePosition(heldItem))
                 {
                     activeGrid.AddItemToMousePosition(heldItem);

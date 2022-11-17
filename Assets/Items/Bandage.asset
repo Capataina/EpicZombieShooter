@@ -15,6 +15,8 @@ MonoBehaviour:
   itemId: 0
   itemName: Bandage
   itemModel: {fileID: 277640533681887829, guid: deb6d9755e8cc2f42ba4533618d727f6, type: 3}
-  itemIcon: {fileID: 0}
+  itemIcon: {fileID: 21300000, guid: 29864e6fe8101b838a9a2b19bdd1b913, type: 3}
+  inventoryWidth: 0
+  inventoryHeight: 0
   healthEffect: 20
   staminaEffect: 0

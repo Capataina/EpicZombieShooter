@@ -31,6 +31,8 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     public bool isSprinting;
 
+    [SerializeField] ItemGrid inventoryGrid;
+
     private float speed;
 
     private bool isGrounded()
@@ -142,45 +144,19 @@ public class PlayerController : MonoBehaviour
             PlayerVelocity.y += gravityValue * Time.deltaTime;
         playerControls.Move(PlayerVelocity * Time.deltaTime);
 
-        // pickup item
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            // get items in pickup range
-            Collider[] itemsInRange = Physics.OverlapSphere(
-                transform.position,
-                playerData.itemPickupRadius,
-                LayerMask.GetMask("Item")
-            );
-            if (itemsInRange.Length == 0 || itemsInRange == null)
-                return;
-
-            // find closest item and add to inventory
-            GameObject closestItem = null;
-            float minDist = Mathf.Infinity;
-            foreach (Collider item in itemsInRange)
-            {
-                float curDist = Vector3.Distance(item.transform.position, transform.position);
-                if (curDist < minDist)
-                {
-                    minDist = curDist;
-                    closestItem = item.gameObject;
-                }
-            }
-            playerData.PickupItem(closestItem.GetComponent<ItemObject>().itemScript);
-            Destroy(closestItem);
-        }
 
         // use item
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            // get the first item in inventroy and use it
-            // if the item is consumable
-            var firstItem = playerData.inventory[0];
-            if (firstItem is ConsumableItem)
-            {
-                ((ConsumableItem)firstItem).ConsumeItem();
-                playerData.inventory.RemoveAt(0);
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.Q))
+        //{
+        //// get the first item in inventroy and use it
+        //// if the item is consumable
+        //var firstItem = playerData.inventory[0];
+        //if (firstItem is ConsumableItem)
+        //{
+        //((ConsumableItem)firstItem).ConsumeItem();
+        //playerData.inventory.RemoveAt(0);
+        //}
+        //}
     }
 }
+//
