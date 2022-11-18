@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController playerControls;
     private Vector3 PlayerVelocity;
     private bool groundedPlayer;
+    [SerializeField] Animator animator;
 
     [SerializeField]
     private float gravityValue = -9.81f;
@@ -72,6 +73,8 @@ public class PlayerController : MonoBehaviour
             Input.GetAxisRaw("Vertical")
         ).normalized;
 
+        animator.SetBool("isMoving", playerMovement.magnitude > 0);
+
         // Check if sprinting and adjust speed
         if (
             Input.GetKey(KeyCode.LeftShift)
@@ -131,6 +134,9 @@ public class PlayerController : MonoBehaviour
                 Time.deltaTime * rotationSpeed
             );
         }
+
+        animator.SetFloat("walkToSprint", (speed - playerData.walkSpeed) / (playerData.sprintSpeed - playerData.walkSpeed));
+        print((speed - playerData.walkSpeed) / (playerData.sprintSpeed - playerData.walkSpeed));
 
         playerControls.Move(Vector3.down * gravityValue * Time.deltaTime);
 
