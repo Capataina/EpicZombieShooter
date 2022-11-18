@@ -8,15 +8,18 @@ public class PositionEquippedItem : MonoBehaviour
     [SerializeField] GameObject equippedWeaponPosition;
 
     PlayerData playerData;
+    GameObject equipmentModel;
 
     private void OnEnable()
     {
         playerData.itemEquippedEvent.AddListener(InitializeEquipment);
+        playerData.itemUnequipEvent.AddListener(RemoveEquippedItem);
     }
 
     private void OnDisable()
     {
         playerData.itemEquippedEvent.RemoveListener(InitializeEquipment);
+        playerData.itemUnequipEvent.RemoveListener(RemoveEquippedItem);
     }
 
     private void Awake()
@@ -26,11 +29,17 @@ public class PositionEquippedItem : MonoBehaviour
 
     private void InitializeEquipment(ItemBase item)
     {
-        GameObject equipmentModel = Instantiate(playerData.equippedItem.itemModel, Vector3.zero, Quaternion.identity);
+        equipmentModel = Instantiate(playerData.equippedItem.itemModel, Vector3.zero, Quaternion.identity);
         equipmentModel.transform.parent = equippedWeaponPosition.transform;
         equipmentModel.transform.localPosition = Vector3.zero;
         equipmentModel.transform.localRotation = Quaternion.identity;
         GetComponent<WeasponShooting>().Initialize(item);
+    }
+
+    private void RemoveEquippedItem()
+    {
+        GameObject.Destroy(equipmentModel);
+        equipmentModel = null;
     }
 }
 

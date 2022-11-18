@@ -41,9 +41,8 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
     public float staminaGain;
     public float itemPickupRadius;
 
-    public List<ItemBase> inventory;
-
     public UnityEvent<ItemBase> itemEquippedEvent;
+    public UnityEvent itemUnequipEvent;
 
     #region gettersetters
     public float Health
@@ -92,7 +91,7 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
         // TODO needs to be changed
         if (item is not ProjectileWeaponItems)
         {
-            inventory.Add(item);
+            //inventory.Add(item);
             Debug.Log("picked up " + item.itemName);
         }
         else
@@ -106,6 +105,13 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
     {
         // TODO needs to be changed
         equippedItem = item;
+
         itemEquippedEvent.Invoke(item);
+    }
+
+    public void UnequipItem()
+    {
+        equippedItem = null;
+        itemUnequipEvent.Invoke();
     }
 }

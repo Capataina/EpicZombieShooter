@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     private CharacterController playerControls;
     private Vector3 PlayerVelocity;
     private bool groundedPlayer;
+
+    [SerializeField]
     private float gravityValue = -9.81f;
 
     [SerializeField]
@@ -31,18 +33,20 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     public bool isSprinting;
 
+    [SerializeField] ItemGrid inventoryGrid;
+
     private float speed;
 
-    private bool isGrounded()
+    private bool IsGrounded()
     {
         RaycastHit hit;
 
         return Physics.SphereCast(
-            transform.position - (Vector3.up * 1f),
-            0.2f,
+            transform.position + Vector3.down * 0.5f,
+            0.5f,
             Vector3.down,
             out hit,
-            0.2f,
+            0.53f,
             defaultLayer
         );
     }
@@ -63,10 +67,10 @@ public class PlayerController : MonoBehaviour
         // Get horizontal and vertical player inputs
 
         Vector3 playerMovement = new Vector3(
-            Input.GetAxis("Horizontal"),
+            Input.GetAxisRaw("Horizontal"),
             0,
-            Input.GetAxis("Vertical")
-        );
+            Input.GetAxisRaw("Vertical")
+        ).normalized;
 
         // Check if sprinting and adjust speed
         if (
@@ -108,18 +112,11 @@ public class PlayerController : MonoBehaviour
                 desiredRotation,
                 Time.deltaTime * rotationSpeed
             );
-
-            // transform.rotation = Quaternion.Euler(0, playerRotation, 0);
         }
 
         // is player grounded
-        groundedPlayer = isGrounded();
+        groundedPlayer = IsGrounded();
         // print(groundedPlayer);
-
-        if (groundedPlayer && PlayerVelocity.y < 0)
-        {
-            PlayerVelocity.y = 0f;
-        }
 
         // Horizontal and Vertical Movement
 
@@ -135,54 +132,20 @@ public class PlayerController : MonoBehaviour
             );
         }
 
-        if (Input.GetButtonDown("Jump") && groundedPlayer)
-        {
-            PlayerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-        }
-
-        if (affectedByGravity)
-            PlayerVelocity.y += gravityValue * Time.deltaTime;
-        playerControls.Move(PlayerVelocity * Time.deltaTime);
-
-        // pickup item
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            // get items in pickup range
-            Collider[] itemsInRange = Physics.OverlapSphere(
-                transform.position,
-                playerData.itemPickupRadius,
-                LayerMask.GetMask("Item")
-            );
-            if (itemsInRange.Length == 0 || itemsInRange == null)
-                return;
-
-            // find closest item and add to inventory
-            GameObject closestItem = null;
-            float minDist = Mathf.Infinity;
-            foreach (Collider item in itemsInRange)
-            {
-                float curDist = Vector3.Distance(item.transform.position, transform.position);
-                if (curDist < minDist)
-                {
-                    minDist = curDist;
-                    closestItem = item.gameObject;
-                }
-            }
-            playerData.PickupItem(closestItem.GetComponent<ItemObject>().itemScript);
-            Destroy(closestItem);
-        }
+        playerControls.Move(Vector3.down * gravityValue * Time.deltaTime);
 
         // use item
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            // get the first item in inventroy and use it
-            // if the item is consumable
-            var firstItem = playerData.inventory[0];
-            if (firstItem is ConsumableItem)
-            {
-                ((ConsumableItem)firstItem).ConsumeItem();
-                playerData.inventory.RemoveAt(0);
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.Q))
+        //{
+        //// get the first item in inventroy and use it
+        //// if the item is consumable
+        //var firstItem = playerData.inventory[0];
+        //if (firstItem is ConsumableItem)
+        //{
+        //((ConsumableItem)firstItem).ConsumeItem();
+        //playerData.inventory.RemoveAt(0);
+        //}
+        //}
     }
 }
+//

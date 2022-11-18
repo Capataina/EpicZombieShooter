@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,8 +10,6 @@ public class ItemGrid : MonoBehaviour
     [SerializeField] int inventoryGridWidth;
     [SerializeField] int inventoryGridHeight;
 
-    [SerializeField] ItemBase itemToAddSmall;
-    [SerializeField] ItemBase itemToAddBig;
     [SerializeField] ItemBase itemToAddHorizontal;
     [SerializeField] GameObject inventoryItemPrefab;
 
@@ -22,13 +21,9 @@ public class ItemGrid : MonoBehaviour
     {
         rectTransform = GetComponent<RectTransform>();
         Init();
-
-        //InstansiateItem(itemToAddSmall, 1, 1);
-        //InstansiateItem(itemToAddBig, 3, 1);
-        InstansiateItem(itemToAddHorizontal, 0, 0);
     }
 
-    private void InstansiateItem(ItemBase item, int posX, int posY)
+    public InventoryItem InstansiateItem(ItemBase item)
     {
         GameObject newInventoryItem = Instantiate(inventoryItemPrefab);
         newInventoryItem.GetComponent<Image>().sprite = item.itemIcon;
@@ -37,13 +32,96 @@ public class ItemGrid : MonoBehaviour
             item.inventoryHeight * tileSize
         );
 
-        InventoryItem newInvtentoryItemComp = newInventoryItem.GetComponent<InventoryItem>();
-        newInvtentoryItemComp.width = item.inventoryWidth;
-        newInvtentoryItemComp.height = item.inventoryHeight;
+        InventoryItem newInventoryItemComp = newInventoryItem.GetComponent<InventoryItem>();
+        newInventoryItemComp.width = item.inventoryWidth;
+        newInventoryItemComp.height = item.inventoryHeight;
+        newInventoryItemComp.itemScript = item;
 
-        AddItem(newInvtentoryItemComp, posX, posY);
+        return newInventoryItemComp;
     }
 
+    public void InstansiateAndAddItem(ItemBase item, int posX, int posY)
+    {
+        AddItem(InstansiateItem(item), posX, posY);
+    }
+
+    public void QuickAddToInventory(ItemBase item)
+    {
+        bool rotated = false;
+        Vector2Int pos = new Vector2Int(-1, -1);
+        for (int i = 0; i < inventoryItemSlots.GetLength(0); i++)
+        {
+            if (pos.x == -1)
+            {
+                for (int j = 0; j < inventoryItemSlots.GetLength(1); j++)
+                {
+                    if (!CheckOverlapAndOverflowAtPosition(item.inventoryWidth, item.inventoryHeight, i, j))
+                    {
+                        pos = new Vector2Int(i, j);
+                        break;
+                    }
+                    else
+                    if (!CheckOverlapAtPositionRotated(item.inventoryWidth, item.inventoryHeight, i, j))
+                    {
+                        pos = new Vector2Int(i, j);
+                        rotated = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+        if (pos.x != -1)
+        {
+            InventoryItem newItem = InstansiateItem(item);
+            if (rotated)
+            {
+                newItem.ToggleRotation();
+                newItem.CorrectPivot();
+            }
+            print(newItem.itemScript);
+            AddItem(newItem, pos.x, pos.y);
+        }
+    }
+
+    private bool CheckOverlapAndOverflowAtPosition(int width, int height, int posX, int posY)
+    {
+        if (posX + width > inventoryItemSlots.GetLength(0) ||
+        posY + height > inventoryItemSlots.GetLength(1)) return true;
+
+        for (int i = posX; i < posX + width; i++)
+        {
+            for (int j = posY; j < posY + height; j++)
+            {
+                if (inventoryItemSlots[i, j] != null)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private bool CheckOverlapAtPositionRotated(int width, int height, int posX, int posY)
+    {
+        if (posX + height > inventoryItemSlots.GetLength(0) ||
+        posY + width > inventoryItemSlots.GetLength(1)) return true;
+
+        for (int i = posX; i < posX + height; i++)
+        {
+            for (int j = posY; j < posY + width; j++)
+            {
+                if (inventoryItemSlots[i, j] != null)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     private void Init()
     {
         rectTransform.sizeDelta = new Vector2(inventoryGridWidth * tileSize, inventoryGridHeight * tileSize);
