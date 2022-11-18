@@ -42,6 +42,7 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
     public float itemPickupRadius;
 
     public UnityEvent<ItemBase> itemEquippedEvent;
+    public UnityEvent itemUnequipEvent;
 
     #region gettersetters
     public float Health
@@ -106,5 +107,11 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
         equippedItem = item;
 
         itemEquippedEvent.Invoke(item);
+    }
+
+    public void UnequipItem()
+    {
+        equippedItem = null;
+        itemUnequipEvent.Invoke();
     }
 }

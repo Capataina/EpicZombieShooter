@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryItem : MonoBehaviour
 {
     [HideInInspector] public int width;
     [HideInInspector] public int height;
     [HideInInspector] public bool rotated = false;
+    [HideInInspector] public ItemBase itemScript;
 
     RectTransform rectTransform;
 
@@ -46,4 +48,17 @@ public class InventoryItem : MonoBehaviour
         }
         rectTransform.pivot = newPivot;
     }
+
+    public void PrepareForEquipmentSlot(EquipmentSlot slot)
+    {
+        if (rotated)
+        {
+            ToggleRotation();
+        }
+
+        rectTransform.SetParent(slot.GetComponent<RectTransform>());
+        rectTransform.pivot = new Vector2(0.5f, 0.5f);
+        rectTransform.localPosition = new Vector2(0, 0);
+    }
+
 }

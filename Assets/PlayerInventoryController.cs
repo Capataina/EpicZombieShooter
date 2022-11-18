@@ -19,11 +19,11 @@ public class PlayerInventoryController : MonoBehaviour
         {
             if (inventoryIsActive)
             {
-                inventoryCanvas.SetActive(false);
+                inventoryCanvas.GetComponent<Canvas>().enabled = false;
             }
             else
             {
-                inventoryCanvas.SetActive(true);
+                inventoryCanvas.GetComponent<Canvas>().enabled = true;
             }
             inventoryIsActive = !inventoryIsActive;
         }
@@ -53,7 +53,9 @@ public class PlayerInventoryController : MonoBehaviour
                 }
             }
             print("picked up item");
+            inventoryCanvas.GetComponent<Canvas>().enabled = true;
             inventoryGrid.QuickAddToInventory(closestItem.GetComponent<ItemObject>().itemScript);
+            inventoryCanvas.GetComponent<Canvas>().enabled = false;
             Destroy(closestItem);
         }
     }

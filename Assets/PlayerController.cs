@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     private CharacterController playerControls;
     private Vector3 PlayerVelocity;
     private bool groundedPlayer;
+
+    [SerializeField]
     private float gravityValue = -9.81f;
 
     [SerializeField]
@@ -35,16 +37,16 @@ public class PlayerController : MonoBehaviour
 
     private float speed;
 
-    private bool isGrounded()
+    private bool IsGrounded()
     {
         RaycastHit hit;
 
         return Physics.SphereCast(
-            transform.position - (Vector3.up * 1f),
-            0.2f,
+            transform.position + Vector3.down * 0.5f,
+            0.5f,
             Vector3.down,
             out hit,
-            0.2f,
+            0.53f,
             defaultLayer
         );
     }
@@ -113,13 +115,8 @@ public class PlayerController : MonoBehaviour
         }
 
         // is player grounded
-        groundedPlayer = isGrounded();
+        groundedPlayer = IsGrounded();
         // print(groundedPlayer);
-
-        if (groundedPlayer && PlayerVelocity.y < 0)
-        {
-            PlayerVelocity.y = 0f;
-        }
 
         // Horizontal and Vertical Movement
 
@@ -135,15 +132,7 @@ public class PlayerController : MonoBehaviour
             );
         }
 
-        if (Input.GetButtonDown("Jump") && groundedPlayer)
-        {
-            PlayerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-        }
-
-        if (affectedByGravity)
-            PlayerVelocity.y += gravityValue * Time.deltaTime;
-        playerControls.Move(PlayerVelocity * Time.deltaTime);
-
+        playerControls.Move(Vector3.down * gravityValue * Time.deltaTime);
 
         // use item
         //if (Input.GetKeyDown(KeyCode.Q))

@@ -21,17 +21,6 @@ public class ItemGrid : MonoBehaviour
     {
         rectTransform = GetComponent<RectTransform>();
         Init();
-
-        InstansiateAndAddItem(itemToAddHorizontal, 0, 0);
-        InstansiateAndAddItem(itemToAddHorizontal, 0, 1);
-        InstansiateAndAddItem(itemToAddHorizontal, 0, 2);
-        InstansiateAndAddItem(itemToAddHorizontal, 0, 3);
-        InstansiateAndAddItem(itemToAddHorizontal, 0, 4);
-        InstansiateAndAddItem(itemToAddHorizontal, 0, 5);
-        InstansiateAndAddItem(itemToAddHorizontal, 0, 6);
-        InstansiateAndAddItem(itemToAddHorizontal, 0, 7);
-        InstansiateAndAddItem(itemToAddHorizontal, 0, 8);
-        InstansiateAndAddItem(itemToAddHorizontal, 0, 9);
     }
 
     public InventoryItem InstansiateItem(ItemBase item)
@@ -43,11 +32,12 @@ public class ItemGrid : MonoBehaviour
             item.inventoryHeight * tileSize
         );
 
-        InventoryItem newInvtentoryItemComp = newInventoryItem.GetComponent<InventoryItem>();
-        newInvtentoryItemComp.width = item.inventoryWidth;
-        newInvtentoryItemComp.height = item.inventoryHeight;
+        InventoryItem newInventoryItemComp = newInventoryItem.GetComponent<InventoryItem>();
+        newInventoryItemComp.width = item.inventoryWidth;
+        newInventoryItemComp.height = item.inventoryHeight;
+        newInventoryItemComp.itemScript = item;
 
-        return newInvtentoryItemComp;
+        return newInventoryItemComp;
     }
 
     public void InstansiateAndAddItem(ItemBase item, int posX, int posY)
@@ -92,6 +82,7 @@ public class ItemGrid : MonoBehaviour
                 newItem.ToggleRotation();
                 newItem.CorrectPivot();
             }
+            print(newItem.itemScript);
             AddItem(newItem, pos.x, pos.y);
         }
     }
@@ -143,7 +134,6 @@ public class ItemGrid : MonoBehaviour
         {
             for (int j = posY; j < posY + item.height; j++)
             {
-                print((i, j));
                 inventoryItemSlots[i, j] = item;
             }
         }
