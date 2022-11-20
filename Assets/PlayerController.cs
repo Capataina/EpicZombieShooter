@@ -4,39 +4,24 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private PlayerData playerData;
-    private CharacterController playerControls;
-    private Vector3 PlayerVelocity;
-    private bool groundedPlayer;
     [SerializeField] Animator animator;
 
-    [SerializeField]
-    private float gravityValue = -9.81f;
-
-    [SerializeField]
-    bool affectedByGravity = true;
-
-    [SerializeField]
-    private float jumpHeight = 4.0f;
-
-    [SerializeField]
-    LayerMask defaultLayer;
-
-    [SerializeField]
-    Camera playerCamera;
-
-    [SerializeField]
-    float rotationSpeed;
-
-    [SerializeField]
-    float sprintStaminaCost;
-
-    [HideInInspector]
-    public bool isSprinting;
-
+    [SerializeField] private float gravityValue = -9.81f;
+    [SerializeField] bool affectedByGravity = true;
+    [SerializeField] private float jumpHeight = 4.0f;
+    [SerializeField] LayerMask defaultLayer;
+    [SerializeField] Camera playerCamera;
+    [SerializeField] float rotationSpeed;
+    [SerializeField] float sprintStaminaCost;
     [SerializeField] ItemGrid inventoryGrid;
 
+    [HideInInspector] public bool isSprinting;
+
+    private PlayerData playerData;
+    private CharacterController playerControls;
+    private bool groundedPlayer;
     private float speed;
+    private bool isAiming;
 
     private bool IsGrounded()
     {
@@ -104,6 +89,7 @@ public class PlayerController : MonoBehaviour
             && Input.GetMouseButton(1)
         )
         {
+            isAiming = true;
             Vector3 rotaionTarget = mousePositionRay.GetPoint(mouseDistance);
             Vector3 rotationDirection = rotaionTarget - transform.position;
             float playerRotation =
@@ -115,14 +101,23 @@ public class PlayerController : MonoBehaviour
                 desiredRotation,
                 Time.deltaTime * rotationSpeed
             );
+
+            float angleBetween = Vector3.SignedAngle(transform.forward, playerMovement, Vector3.up);
+            Vector3 strafeVector = Quaternion.AngleAxis(angleBetween, Vector3.up) * new Vector3(0, 0, 1);
+
+            animator.SetFloat("movementDirectionX", strafeVector.x);
+            animator.SetFloat("movementDirectionY", strafeVector.z);
         }
+        else
+        {
+            isAiming = false;
+        }
+        animator.SetBool("isAiming", isAiming);
 
         // is player grounded
         groundedPlayer = IsGrounded();
-        // print(groundedPlayer);
 
         // Horizontal and Vertical Movement
-
         playerControls.Move(playerMovement * Time.deltaTime * speed);
 
         if (playerMovement != Vector3.zero && !Input.GetMouseButton(1))
@@ -136,7 +131,6 @@ public class PlayerController : MonoBehaviour
         }
 
         animator.SetFloat("walkToSprint", (speed - playerData.walkSpeed) / (playerData.sprintSpeed - playerData.walkSpeed));
-        print((speed - playerData.walkSpeed) / (playerData.sprintSpeed - playerData.walkSpeed));
 
         playerControls.Move(Vector3.down * gravityValue * Time.deltaTime);
 
