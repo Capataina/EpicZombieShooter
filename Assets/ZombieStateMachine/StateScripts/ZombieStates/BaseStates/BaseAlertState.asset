@@ -12,3 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14107e11d3ab8664f9a3b067455ff456, type: 3}
   m_Name: BaseAlertState
   m_EditorClassIdentifier: 
+  alertSpeed: 2

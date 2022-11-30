@@ -35,6 +35,11 @@ public class ZombieBaseIdleState : ZombieCurrentState
     {
         isAlerted(zombie);
 
+        if (zombie.zombieNavAgent.velocity.magnitude < 0.1f)
+        {
+            zombie.playAnimation("Idle");
+        }
+
         while (zombie.zombieNavAgent.speed >= 0.1f)
         {
             zombie.zombieNavAgent.speed -= 0.05f;

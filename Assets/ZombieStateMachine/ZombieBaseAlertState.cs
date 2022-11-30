@@ -5,6 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "StateMachine/Zombie/BaseStates/Alert")]
 public class ZombieBaseAlertState : ZombieCurrentState
 {
+    [SerializeField] float alertSpeed;
     private float playerToZombieDistance;
 
     private bool InMeleeRange(ZombieStateMachineController zombie)
@@ -44,7 +45,8 @@ public class ZombieBaseAlertState : ZombieCurrentState
     public override void EnterState(ZombieStateMachineController zombie)
     {
         zombie.zombieNavAgent.acceleration = 8;
-        zombie.zombieNavAgent.speed = 4.5f;
+        zombie.zombieNavAgent.speed = alertSpeed;
+        zombie.playAnimation("Chase");
         Debug.Log("Entered Alert State!");
     }
 
@@ -52,6 +54,9 @@ public class ZombieBaseAlertState : ZombieCurrentState
     {
         isAlerted(zombie);
         InMeleeRange(zombie);
+
+        zombie.playAnimation("Chase");
+        Debug.Log("bruh");
 
         if (InMeleeRange(zombie))
         {

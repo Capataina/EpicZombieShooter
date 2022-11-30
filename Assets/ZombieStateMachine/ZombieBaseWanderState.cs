@@ -4,6 +4,9 @@ using UnityEngine.AI;
 [CreateAssetMenu(menuName = "StateMachine/Zombie/BaseStates/Wander")]
 public class ZombieBaseWanderState : ZombieCurrentState
 {
+
+    [SerializeField] float wanderSpeed;
+
     private float wanderRadius = 10;
     public float wanderChance = 100;
     public float timesWandered = 0;
@@ -80,7 +83,7 @@ public class ZombieBaseWanderState : ZombieCurrentState
         timesWandered = 0;
         wanderChance = 100;
         zombie.zombieNavAgent.acceleration = 3;
-        zombie.zombieNavAgent.speed = 1.5f;
+        zombie.zombieNavAgent.speed = wanderSpeed;
         Wander(zombie);
         Debug.Log("Entered wandering state!");
     }
@@ -96,6 +99,7 @@ public class ZombieBaseWanderState : ZombieCurrentState
         //     )
         // );
 
+        zombie.playAnimation("Walk");
         isAlerted(zombie);
         getDistance(zombie);
         StaticCheck(zombie);

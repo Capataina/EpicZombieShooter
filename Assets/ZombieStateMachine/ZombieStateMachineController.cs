@@ -32,6 +32,8 @@ public class ZombieStateMachineController : MonoBehaviour
     [SerializeField]
     public GameObject thePlayer;
 
+    [SerializeField] public Animator animator;
+
     void Awake()
     {
         zombieNavAgent = GetComponent<NavMeshAgent>();
@@ -54,5 +56,13 @@ public class ZombieStateMachineController : MonoBehaviour
     {
         currentState = newState;
         currentState.EnterState(this);
+    }
+
+    public void playAnimation(string name)
+    {
+        if (!animator.IsInTransition(0))
+        {
+            animator.CrossFade("Armature|" + name, 0);
+        }
     }
 }
