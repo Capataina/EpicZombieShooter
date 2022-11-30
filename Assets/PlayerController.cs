@@ -7,13 +7,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Animator animator;
 
     [SerializeField] private float gravityValue = -9.81f;
-    [SerializeField] bool affectedByGravity = true;
+    [SerializeField] private bool affectedByGravity = true;
     [SerializeField] private float jumpHeight = 4.0f;
-    [SerializeField] LayerMask defaultLayer;
-    [SerializeField] Camera playerCamera;
-    [SerializeField] float rotationSpeed;
-    [SerializeField] float sprintStaminaCost;
-    [SerializeField] ItemGrid inventoryGrid;
+    [SerializeField] private LayerMask defaultLayer;
+    [SerializeField] private Camera playerCamera;
+    [SerializeField] private float rotationSpeed;
+    [SerializeField] private float sprintStaminaCost;
+    [SerializeField] private ItemGrid inventoryGrid;
+    [SerializeField] private float walkAnimationLerpRate = 0.2f;
 
     [HideInInspector] public bool isSprinting;
 
@@ -21,7 +22,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController playerControls;
     private bool groundedPlayer;
     private float speed;
-    private bool isAiming;
+    private Vector3 walkAnimationVector = Vector3.zero;
 
     private bool IsGrounded()
     {
@@ -51,12 +52,13 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         // Get horizontal and vertical player inputs
-
         Vector3 playerMovement = new Vector3(
             Input.GetAxisRaw("Horizontal"),
             0,
             Input.GetAxisRaw("Vertical")
         ).normalized;
+
+        walkAnimationVector = Vector3.Lerp(walkAnimationVector, playerMovement, walkAnimationLerpRate);
 
         animator.SetBool("isMoving", playerMovement.magnitude > 0);
 
@@ -89,7 +91,7 @@ public class PlayerController : MonoBehaviour
             && Input.GetMouseButton(1)
         )
         {
-            isAiming = true;
+            playerData.isAiming = true;
             Vector3 rotaionTarget = mousePositionRay.GetPoint(mouseDistance);
             Vector3 rotationDirection = rotaionTarget - transform.position;
             float playerRotation =
@@ -102,7 +104,8 @@ public class PlayerController : MonoBehaviour
                 Time.deltaTime * rotationSpeed
             );
 
-            float angleBetween = Vector3.SignedAngle(transform.forward, playerMovement, Vector3.up);
+
+            float angleBetween = Vector3.SignedAngle(transform.forward, walkAnimationVector, Vector3.up);
             Vector3 strafeVector = Quaternion.AngleAxis(angleBetween, Vector3.up) * new Vector3(0, 0, 1);
 
             animator.SetFloat("movementDirectionX", strafeVector.x);
@@ -110,9 +113,9 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            isAiming = false;
+            playerData.isAiming = false;
         }
-        animator.SetBool("isAiming", isAiming);
+        animator.SetBool("isAiming", playerData.isAiming);
 
         // is player grounded
         groundedPlayer = IsGrounded();
@@ -134,6 +137,7 @@ public class PlayerController : MonoBehaviour
 
         playerControls.Move(Vector3.down * gravityValue * Time.deltaTime);
 
+
         // use item
         //if (Input.GetKeyDown(KeyCode.Q))
         //{
@@ -146,6 +150,11 @@ public class PlayerController : MonoBehaviour
         //playerData.inventory.RemoveAt(0);
         //}
         //}
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(transform.position, transform.position + transform.forward * 5);
     }
 }
 //

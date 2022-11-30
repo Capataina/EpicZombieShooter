@@ -22,3 +22,4 @@ MonoBehaviour:
   damage: 20
   cooldown: 0.1
   isAutomatic: 1
+  muzzleFlash: {fileID: 4986679833108480029, guid: 6eabb209c41c0424892b178b34fb1c69, type: 3}

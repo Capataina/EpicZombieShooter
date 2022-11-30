@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PlayerArmMask
+  m_Mask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: Armature
+    m_Weight: 0
+  - m_Path: Armature/Body
+    m_Weight: 0
+  - m_Path: Armature/Body/ArmTop.L
+    m_Weight: 1
+  - m_Path: Armature/Body/ArmTop.L/ArmBottom.L
+    m_Weight: 1
+  - m_Path: Armature/Body/ArmTop.L/ArmBottom.L/Hand.L
+    m_Weight: 1
+  - m_Path: Armature/Body/ArmTop.L/ArmBottom.L/Hand.L/Hand.L_end
+    m_Weight: 1
+  - m_Path: Armature/Body/ArmTop.R
+    m_Weight: 1
+  - m_Path: Armature/Body/ArmTop.R/ArmBottom.R
+    m_Weight: 1
+  - m_Path: Armature/Body/ArmTop.R/ArmBottom.R/Hand.R
+    m_Weight: 1
+  - m_Path: Armature/Body/ArmTop.R/ArmBottom.R/Hand.R/Hand.R_end
+    m_Weight: 1
+  - m_Path: Armature/Body/Head
+    m_Weight: 0
+  - m_Path: Armature/Body/Head/Head_end
+    m_Weight: 0
+  - m_Path: Armature/Body/UpperLeg.L
+    m_Weight: 0
+  - m_Path: Armature/Body/UpperLeg.L/LowerLeg.L
+    m_Weight: 0
+  - m_Path: Armature/Body/UpperLeg.L/LowerLeg.L/Foot.L
+    m_Weight: 0
+  - m_Path: Armature/Body/UpperLeg.L/LowerLeg.L/Foot.L/Foot.L_end
+    m_Weight: 0
+  - m_Path: Armature/Body/UpperLeg.R
+    m_Weight: 0
+  - m_Path: Armature/Body/UpperLeg.R/LowerLeg.R
+    m_Weight: 0
+  - m_Path: Armature/Body/UpperLeg.R/LowerLeg.R/Foot.R
+    m_Weight: 0
+  - m_Path: Armature/Body/UpperLeg.R/LowerLeg.R/Foot.R/Foot.R_end
+    m_Weight: 0
+  - m_Path: Armature/FootIK.L
+    m_Weight: 0
+  - m_Path: Armature/FootIK.L/FootIK.L_end
+    m_Weight: 0
+  - m_Path: Armature/FootIK.R
+    m_Weight: 0
+  - m_Path: Armature/FootIK.R/FootIK.R_end
+    m_Weight: 0
+  - m_Path: Armature/FootIKTarger.R
+    m_Weight: 0
+  - m_Path: Armature/FootIKTarger.R/FootIKTarger.R_end
+    m_Weight: 0
+  - m_Path: Armature/FootIKTarget.L
+    m_Weight: 0
+  - m_Path: Armature/FootIKTarget.L/FootIKTarget.L_end
+    m_Weight: 0
+  - m_Path: Armature/HandIK.L
+    m_Weight: 1
+  - m_Path: Armature/HandIK.L/HandIK.L_end
+    m_Weight: 1
+  - m_Path: Armature/HandIK.R
+    m_Weight: 1
+  - m_Path: Armature/HandIK.R/HandIK.R_end
+    m_Weight: 1
+  - m_Path: Armature/HandIKTarget.L
+    m_Weight: 1
+  - m_Path: Armature/HandIKTarget.L/HandIKTarget.L_end
+    m_Weight: 1
+  - m_Path: Armature/HandIKTarget.R
+    m_Weight: 1
+  - m_Path: Armature/HandIKTarget.R/HandIKTarget.R_end
+    m_Weight: 1
+  - m_Path: Cube
+    m_Weight: 0

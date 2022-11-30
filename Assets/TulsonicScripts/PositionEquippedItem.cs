@@ -6,9 +6,9 @@ public class PositionEquippedItem : MonoBehaviour
 {
 
     [SerializeField] GameObject equippedWeaponPosition;
+    [SerializeField] GameObject handIK;
 
     PlayerData playerData;
-    GameObject equipmentModel;
 
     private void OnEnable()
     {
@@ -27,19 +27,34 @@ public class PositionEquippedItem : MonoBehaviour
         playerData = PlayerData.Instance;
     }
 
+    private void Update()
+    {
+        if (playerData.equipmentModel != null)
+        {
+            if (playerData.isAiming)
+            {
+                playerData.equipmentModel.SetActive(true);
+            }
+            else
+            {
+                playerData.equipmentModel.SetActive(false);
+            }
+        }
+    }
+
     private void InitializeEquipment(ItemBase item)
     {
-        equipmentModel = Instantiate(playerData.equippedItem.itemModel, Vector3.zero, Quaternion.identity);
-        equipmentModel.transform.parent = equippedWeaponPosition.transform;
-        equipmentModel.transform.localPosition = Vector3.zero;
-        equipmentModel.transform.localRotation = Quaternion.identity;
+        playerData.equipmentModel = Instantiate(playerData.equippedItem.itemModel, Vector3.zero, Quaternion.identity);
+        playerData.equipmentModel.transform.parent = handIK.transform;
+        playerData.equipmentModel.transform.localPosition = Vector3.zero;
+        playerData.equipmentModel.transform.localRotation = Quaternion.identity;
         GetComponent<WeasponShooting>().Initialize(item);
     }
 
     private void RemoveEquippedItem()
     {
-        GameObject.Destroy(equipmentModel);
-        equipmentModel = null;
+        GameObject.Destroy(playerData.equipmentModel);
+        playerData.equipmentModel = null;
     }
 }
 
