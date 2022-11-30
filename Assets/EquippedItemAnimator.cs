@@ -51,7 +51,6 @@ public class EquippedItemAnimator : MonoBehaviour
         {
             case "M416":
                 PlayAnimation("PoseAimM416");
-                print("gun");
                 break;
 
             default:
