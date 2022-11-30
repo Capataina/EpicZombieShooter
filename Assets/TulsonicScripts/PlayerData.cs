@@ -41,8 +41,12 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
     public float staminaGain;
     public float itemPickupRadius;
 
+    [HideInInspector] public GameObject equipmentModel;
+
     public UnityEvent<ItemBase> itemEquippedEvent;
     public UnityEvent itemUnequipEvent;
+
+    [HideInInspector] public bool isAiming;
 
     #region gettersetters
     public float Health
@@ -103,7 +107,6 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
 
     public void EquipItem(ItemBase item)
     {
-        // TODO needs to be changed
         equippedItem = item;
 
         itemEquippedEvent.Invoke(item);

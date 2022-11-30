@@ -8,4 +8,5 @@ public class ProjectileWeaponItems : EquipableItems
     public float damage;
     public float cooldown;
     public bool isAutomatic;
+    public GameObject muzzleFlash;
 }
