@@ -75,7 +75,14 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            speed = playerData.walkSpeed;
+            if (Input.GetMouseButton(1))
+            {
+                speed = playerData.aimSpeed;
+            }
+            else
+            {
+                speed = playerData.walkSpeed;
+            }
             isSprinting = false;
             if (playerData.Stamina < playerData.maxStamina)
                 playerData.AddStamina(playerData.staminaGain);

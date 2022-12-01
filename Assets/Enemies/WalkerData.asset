@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09a22fadbb32907c9b5da438e3b542b9, type: 3}
   m_Name: WalkerData
   m_EditorClassIdentifier: 
-  maxHealth: 0
+  maxHealth: 100

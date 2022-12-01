@@ -44,12 +44,22 @@ public class ZombieStateMachineController : MonoBehaviour
     {
         currentState = idleState;
         currentState.EnterState(this);
+        GetComponent<CanRagdoll>().DisableRagdoll();
     }
 
     void Update()
     {
         // Debug.Log(currentState);
         currentState.UpdateState(this);
+        CheckDeathState();
+    }
+
+    void CheckDeathState()
+    {
+        if (GetComponent<Zombie>().Health <= 0 && currentState != deathState)
+        {
+            SwitchState(deathState);
+        }
     }
 
     public void SwitchState(ZombieCurrentState newState)

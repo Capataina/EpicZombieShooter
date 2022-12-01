@@ -56,7 +56,6 @@ public class ZombieBaseAlertState : ZombieCurrentState
         InMeleeRange(zombie);
 
         zombie.playAnimation("Chase");
-        Debug.Log("bruh");
 
         if (InMeleeRange(zombie))
         {
