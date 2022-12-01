@@ -35,6 +35,7 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
     private float stamina;
     public float walkSpeed = 4.0f;
     public float sprintSpeed = 8.0f;
+    public float aimSpeed = 2.0f;
 
     [HideInInspector]
     public float speed;
