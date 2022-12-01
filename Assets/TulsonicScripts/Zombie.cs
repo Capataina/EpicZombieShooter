@@ -6,9 +6,9 @@ public class Zombie : MonoBehaviour
 {
     [SerializeField] ZombieData zombieData;
 
-    float health;
+    public float health;
 
-    private float Health
+    public float Health
     {
         get
         {
@@ -30,6 +30,5 @@ public class Zombie : MonoBehaviour
     public void TakeDamage(float dmg)
     {
         Health -= dmg;
-        print(Health);
     }
 }

@@ -74,7 +74,6 @@ public class ZombieBaseWanderState : ZombieCurrentState
         zombie.zombieNavAgent.destination = newPos;
         timesWandered += 1;
         wanderChance = (100 - (timesWandered * 15));
-        Debug.Log(wanderChance);
         randomPercentage = Random.Range(0, 100);
     }
 
