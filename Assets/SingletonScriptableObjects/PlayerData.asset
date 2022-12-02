@@ -16,13 +16,17 @@ MonoBehaviour:
   states: 0
   maxHealth: 50
   maxStamina: 50
-  walkSpeed: 3.6
+  walkSpeed: 3.3
   sprintSpeed: 7
+  aimSpeed: 2
   speed: 0
   staminaGain: 1
   itemPickupRadius: 5
   equipmentModel: {fileID: 0}
   itemEquippedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  playerAssignedEvent:
     m_PersistentCalls:
       m_Calls: []
   itemUnequipEvent:
