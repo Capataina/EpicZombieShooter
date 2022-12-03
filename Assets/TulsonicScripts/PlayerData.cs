@@ -18,7 +18,8 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
         BackPack
     }
 
-    public ItemBase equippedItem;
+    [HideInInspector] public ItemBase equippedItem;
+
 
     public enum PlayerStates
     {
@@ -84,6 +85,7 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
         itemEquippedEvent ??= new UnityEvent<ItemBase>();
         playerAssignedEvent ??= new UnityEvent<GameObject>();
     }
+
 
     public void TakeDamage(float dmg)
     {

@@ -16,9 +16,16 @@ public class WeasponShooting : MonoBehaviour
     [SerializeField] float mfLifeTime;
     GameObject muzzleFlash;
 
+    EquippedItemAnimator equippedItemAnimator;
+
     private void Awake()
     {
         playerData = PlayerData.Instance;
+    }
+
+    private void Start()
+    {
+        equippedItemAnimator = GetComponent<EquippedItemAnimator>();
     }
 
     public void Initialize(ItemBase item)
@@ -72,6 +79,8 @@ public class WeasponShooting : MonoBehaviour
 
     public void Shoot()
     {
+        equippedItemAnimator.SwitchShootingArmAnimation();
+
         RaycastHit hit;
 
         DisplayMuzzleFlash();

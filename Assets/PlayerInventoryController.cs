@@ -37,6 +37,7 @@ public class PlayerInventoryController : MonoBehaviour
                 playerData.itemPickupRadius,
                 LayerMask.GetMask("Item")
             );
+
             if (itemsInRange.Length == 0 || itemsInRange == null)
                 return;
 
@@ -52,7 +53,6 @@ public class PlayerInventoryController : MonoBehaviour
                     closestItem = item.gameObject;
                 }
             }
-            print("picked up item");
             inventoryCanvas.GetComponent<Canvas>().enabled = true;
             inventoryGrid.QuickAddToInventory(closestItem.GetComponent<ItemObject>().itemScript);
             inventoryCanvas.GetComponent<Canvas>().enabled = false;

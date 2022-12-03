@@ -47,11 +47,13 @@ public class PlayerController : MonoBehaviour
         playerData.ActivePlayerObject = gameObject;
         playerControls = GetComponent<CharacterController>();
         playerCamera.transform.parent = null;
+        playerData.equippedItem = null;
     }
 
     // Update is called once per frame
     void Update()
     {
+
         // Get horizontal and vertical player inputs
         Vector3 playerMovement = new Vector3(
             Input.GetAxisRaw("Horizontal"),
@@ -112,7 +114,6 @@ public class PlayerController : MonoBehaviour
                 desiredRotation,
                 Time.deltaTime * rotationSpeed
             );
-
 
             float angleBetween = Vector3.SignedAngle(transform.forward, walkAnimationVector, Vector3.up);
             Vector3 strafeVector = Quaternion.AngleAxis(angleBetween, Vector3.up) * new Vector3(0, 0, 1);

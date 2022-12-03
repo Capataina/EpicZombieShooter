@@ -7,6 +7,7 @@ public class EquippedItemAnimator : MonoBehaviour
 {
     PlayerData playerData;
     [SerializeField] Animator animator;
+    [SerializeField] float animationTransitionTime;
 
     int armLayer;
 
@@ -22,17 +23,52 @@ public class EquippedItemAnimator : MonoBehaviour
         {
             SwitchAimingArmAnimation();
         }
+        else if (playerData.equippedItem != null)
+        {
+            SwitchIdleArmAnimation();
+        }
         else
         {
-            animator.Play("EmptyState", armLayer);
+            if (!animator.IsInTransition(armLayer))
+            {
+                animator.CrossFadeInFixedTime("EmptyState", animationTransitionTime, armLayer);
+            }
         }
     }
 
     private void PlayAnimation(string name)
     {
-        if (animator.IsInTransition(armLayer))
+        if (!animator.IsInTransition(armLayer))
         {
-            animator.CrossFade("Armature|" + name, armLayer);
+            animator.CrossFadeInFixedTime("Armature|" + name, animationTransitionTime, armLayer);
+        }
+    }
+
+    private void SwitchIdleArmAnimation()
+    {
+        ItemBase item = playerData.equippedItem;
+
+
+        // no item is equipped
+        if (item == null)
+        {
+            PlayAnimation("EmptyState");
+            return;
+        }
+
+        switch (item.name)
+        {
+            case "m416":
+                PlayAnimation("HoldingM416");
+                break;
+
+            case "M1911":
+                PlayAnimation("HoldingM1911");
+                break;
+
+            default:
+                //Debug.LogError("Unrecognzied type");
+                break;
         }
     }
 
@@ -49,8 +85,11 @@ public class EquippedItemAnimator : MonoBehaviour
 
         switch (item.name)
         {
-            case "M416":
+            case "m416":
                 PlayAnimation("PoseAimM416");
+                break;
+            case "M1911":
+                PlayAnimation("PoseAimM1911");
                 break;
 
             default:
@@ -59,4 +98,33 @@ public class EquippedItemAnimator : MonoBehaviour
         }
     }
 
+    private void PlayAnimationNoTransition(string name)
+    {
+        animator.Play("Armature|" + name, armLayer);
+    }
+
+    public void SwitchShootingArmAnimation()
+    {
+        ItemBase item = playerData.equippedItem;
+
+        // no item is equipped
+        if (item == null)
+        {
+            //PlayAnimation("PoseAimUnArmed");
+            return;
+        }
+
+        switch (item.name)
+        {
+            case "m416":
+                PlayAnimationNoTransition("ShootingM416");
+                break;
+            case "M1911":
+                PlayAnimationNoTransition("ShootingM1911");
+                break;
+            default:
+                //Debug.LogError("Unrecognzied type");
+                break;
+        }
+    }
 }

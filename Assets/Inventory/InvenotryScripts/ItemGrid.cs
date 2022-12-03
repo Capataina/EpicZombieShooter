@@ -82,7 +82,6 @@ public class ItemGrid : MonoBehaviour
                 newItem.ToggleRotation();
                 newItem.CorrectPivot();
             }
-            print(newItem.itemScript);
             AddItem(newItem, pos.x, pos.y);
         }
     }
