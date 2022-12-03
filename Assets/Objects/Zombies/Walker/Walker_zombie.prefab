@@ -174,7 +174,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ragdollArmature: {fileID: 7036213048894031592}
+  spine: {fileID: 1085625555}
   animator: {fileID: 1301156637}
+  characterCollider: {fileID: 1492288249}
+  navMeshAgent: {fileID: 221768434391078996}
 --- !u!1001 &1043200983
 PrefabInstance:
   m_ObjectHideFlags: 0

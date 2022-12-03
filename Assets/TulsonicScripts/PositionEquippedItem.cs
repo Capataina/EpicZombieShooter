@@ -5,8 +5,8 @@ using UnityEngine;
 public class PositionEquippedItem : MonoBehaviour
 {
 
-    [SerializeField] GameObject equippedWeaponPosition;
     [SerializeField] GameObject handIK;
+    [SerializeField] Transform hand;
 
     PlayerData playerData;
 
@@ -31,14 +31,7 @@ public class PositionEquippedItem : MonoBehaviour
     {
         if (playerData.equipmentModel != null)
         {
-            if (playerData.isAiming)
-            {
-                playerData.equipmentModel.SetActive(true);
-            }
-            else
-            {
-                playerData.equipmentModel.SetActive(false);
-            }
+            playerData.equipmentModel.transform.position = hand.position;
         }
     }
 

@@ -25,7 +25,7 @@ public class ZombieBaseWanderState : ZombieCurrentState
             {
                 Wander(zombie);
                 staticTime = 0;
-                Debug.Log("Static Check Triggered! This is a certified bruh moment.");
+                //Debug.Log("Static Check Triggered! This is a certified bruh moment.");
             }
         }
     }

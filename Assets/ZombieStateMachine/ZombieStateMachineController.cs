@@ -29,8 +29,7 @@ public class ZombieStateMachineController : MonoBehaviour
     [SerializeField]
     public ZombieBaseDeathState deathState;
 
-    [SerializeField]
-    public GameObject thePlayer;
+    [HideInInspector] public GameObject thePlayer;
 
     [SerializeField] public Animator animator;
 
@@ -38,6 +37,21 @@ public class ZombieStateMachineController : MonoBehaviour
     {
         zombieNavAgent = GetComponent<NavMeshAgent>();
         playerData = PlayerData.Instance;
+    }
+
+    private void OnEnable()
+    {
+        playerData.playerAssignedEvent.AddListener(AssignThePlayer);
+    }
+
+    private void OnDestroy()
+    {
+        playerData.playerAssignedEvent.RemoveListener(AssignThePlayer);
+    }
+
+    void AssignThePlayer(GameObject player)
+    {
+        thePlayer = player;
     }
 
     void Start()
@@ -49,7 +63,6 @@ public class ZombieStateMachineController : MonoBehaviour
 
     void Update()
     {
-        // Debug.Log(currentState);
         currentState.UpdateState(this);
         CheckDeathState();
     }

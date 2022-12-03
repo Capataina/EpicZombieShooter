@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -17,7 +18,8 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
         BackPack
     }
 
-    public ItemBase equippedItem;
+    [HideInInspector] public ItemBase equippedItem;
+
 
     public enum PlayerStates
     {
@@ -37,19 +39,31 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
     public float sprintSpeed = 8.0f;
     public float aimSpeed = 2.0f;
 
-    [HideInInspector]
-    public float speed;
+    private GameObject activePlayerObject;
+
+    [HideInInspector] public float speed;
     public float staminaGain;
     public float itemPickupRadius;
 
     [HideInInspector] public GameObject equipmentModel;
 
     public UnityEvent<ItemBase> itemEquippedEvent;
+    public UnityEvent<GameObject> playerAssignedEvent;
     public UnityEvent itemUnequipEvent;
 
     [HideInInspector] public bool isAiming;
 
     #region gettersetters
+
+    public GameObject ActivePlayerObject
+    {
+        get { return activePlayerObject; }
+        set
+        {
+            playerAssignedEvent.Invoke(value);
+            activePlayerObject = value;
+        }
+    }
     public float Health
     {
         get { return health; }
@@ -69,7 +83,9 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
         Health = maxHealth;
         Stamina = maxStamina;
         itemEquippedEvent ??= new UnityEvent<ItemBase>();
+        playerAssignedEvent ??= new UnityEvent<GameObject>();
     }
+
 
     public void TakeDamage(float dmg)
     {

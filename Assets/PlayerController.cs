@@ -44,13 +44,16 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         playerData = PlayerData.Instance;
+        playerData.ActivePlayerObject = gameObject;
         playerControls = GetComponent<CharacterController>();
         playerCamera.transform.parent = null;
+        playerData.equippedItem = null;
     }
 
     // Update is called once per frame
     void Update()
     {
+
         // Get horizontal and vertical player inputs
         Vector3 playerMovement = new Vector3(
             Input.GetAxisRaw("Horizontal"),
@@ -67,6 +70,7 @@ public class PlayerController : MonoBehaviour
             Input.GetKey(KeyCode.LeftShift)
             && playerData.Stamina > 0
             && playerMovement != Vector3.zero
+            && !playerData.isAiming
         )
         {
             speed = playerData.sprintSpeed;
@@ -75,7 +79,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (Input.GetMouseButton(1))
+            if (playerData.isAiming)
             {
                 speed = playerData.aimSpeed;
             }
@@ -111,7 +115,6 @@ public class PlayerController : MonoBehaviour
                 Time.deltaTime * rotationSpeed
             );
 
-
             float angleBetween = Vector3.SignedAngle(transform.forward, walkAnimationVector, Vector3.up);
             Vector3 strafeVector = Quaternion.AngleAxis(angleBetween, Vector3.up) * new Vector3(0, 0, 1);
 
@@ -143,20 +146,6 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat("walkToSprint", (speed - playerData.walkSpeed) / (playerData.sprintSpeed - playerData.walkSpeed));
 
         playerControls.Move(Vector3.down * gravityValue * Time.deltaTime);
-
-
-        // use item
-        //if (Input.GetKeyDown(KeyCode.Q))
-        //{
-        //// get the first item in inventroy and use it
-        //// if the item is consumable
-        //var firstItem = playerData.inventory[0];
-        //if (firstItem is ConsumableItem)
-        //{
-        //((ConsumableItem)firstItem).ConsumeItem();
-        //playerData.inventory.RemoveAt(0);
-        //}
-        //}
     }
 
     private void OnDrawGizmos()
@@ -164,4 +153,3 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawLine(transform.position, transform.position + transform.forward * 5);
     }
 }
-//

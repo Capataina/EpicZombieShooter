@@ -12,17 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65d6a6092c97e976c92d631df1721de6, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  equippedItem: {fileID: 11400000, guid: 923a55e8e4580b01898085b128e25517, type: 2}
+  equippedItem: {fileID: 0}
   states: 0
   maxHealth: 50
   maxStamina: 50
-  walkSpeed: 3.6
+  walkSpeed: 3.3
   sprintSpeed: 7
+  aimSpeed: 2
   speed: 0
   staminaGain: 1
-  itemPickupRadius: 5
+  itemPickupRadius: 2
   equipmentModel: {fileID: 0}
   itemEquippedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  playerAssignedEvent:
     m_PersistentCalls:
       m_Calls: []
   itemUnequipEvent:
