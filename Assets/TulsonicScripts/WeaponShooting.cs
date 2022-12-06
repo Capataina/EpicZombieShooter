@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public class WeasponShooting : MonoBehaviour
+public class WeaponShooting : MonoBehaviour
 {
 
-    ProjectileWeaponItems weapon;
+    ItemData weaponData;
+    ProjectileWeaponItems weaponScript;
     float cooldownTimer;
     bool isAutomatic;
     [HideInInspector] public bool triggerHeld;
     PlayerData playerData;
+    ProjectileWeaponItemsRuntimeData runtimeData;
 
     float mfTimer;
     [SerializeField] float mfLifeTime;
@@ -28,17 +30,19 @@ public class WeasponShooting : MonoBehaviour
         equippedItemAnimator = GetComponent<EquippedItemAnimator>();
     }
 
-    public void Initialize(ItemBase item)
+    public void Initialize(ItemData weaponData)
     {
-        weapon = (ProjectileWeaponItems)item;
-        cooldownTimer = weapon.cooldown;
+        this.weaponData = weaponData;
+        weaponScript = weaponData.itemScript as ProjectileWeaponItems;
+        runtimeData = weaponData.GetRuntimeData() as ProjectileWeaponItemsRuntimeData;
+        cooldownTimer = weaponScript.cooldown;
     }
 
     private void Update()
     {
-        if (playerData.equippedItem == null || playerData.equippedItem is not ProjectileWeaponItems) return;
+        if (playerData.equippedItem == null || playerData.equippedItem.itemScript is not ProjectileWeaponItems) return;
 
-        weapon = (ProjectileWeaponItems)playerData.equippedItem;
+        weaponScript = playerData.equippedItem.itemScript as ProjectileWeaponItems;
 
         //Timing the cooldown
         if (cooldownTimer > 0)
@@ -48,19 +52,26 @@ public class WeasponShooting : MonoBehaviour
 
         if (cooldownTimer <= 0 && Input.GetMouseButton(1))
         {
-            if (weapon.isAutomatic)
+            if (runtimeData.insertedMagazine != null
+            && (runtimeData.insertedMagazine.GetRuntimeData() as MagazineAttachmentRuntimeData).bulletCount > 0)
             {
-                if (Input.GetMouseButton(0))
+                if (weaponScript.isAutomatic)
                 {
-                    Shoot();
+                    if (Input.GetMouseButton(0))
+                    {
+                        Shoot();
+                    }
+                }
+                else
+                {
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        Shoot();
+                    }
                 }
             }
             else
             {
-                if (Input.GetMouseButtonDown(0))
-                {
-                    Shoot();
-                }
             }
         }
 
@@ -90,11 +101,11 @@ public class WeasponShooting : MonoBehaviour
             Zombie zombie = hit.transform.gameObject.GetComponent<Zombie>();
             if (zombie != null)
             {
-                zombie.TakeDamage(weapon.damage);
+                zombie.TakeDamage(weaponScript.damage);
             }
         }
 
-        cooldownTimer = weapon.cooldown;
+        cooldownTimer = weaponScript.cooldown;
     }
 
     private void DisplayMuzzleFlash()
@@ -102,7 +113,7 @@ public class WeasponShooting : MonoBehaviour
         if (muzzleFlash == null)
         {
             Transform spawnerTransform = playerData.equipmentModel.GetComponent<WeaponModel>().muzzleFlashSpawnMarker.transform;
-            muzzleFlash = GameObject.Instantiate(weapon.muzzleFlash, spawnerTransform.position, spawnerTransform.rotation);
+            muzzleFlash = GameObject.Instantiate(weaponScript.muzzleFlash, spawnerTransform.position, spawnerTransform.rotation);
             muzzleFlash.transform.parent = spawnerTransform;
         }
         StartMuzzleTimer();

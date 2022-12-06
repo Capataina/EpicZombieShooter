@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using UnityEngine;
 
 public class GridController : MonoBehaviour
@@ -22,8 +23,10 @@ public class GridController : MonoBehaviour
             heldItem.ToggleRotation();
         }
 
+
         if (Input.GetMouseButtonUp(0) && heldItem != null)
         {
+            if (HandleReload()) return;
             if (activeGrid != null)
             {
                 heldItem.CorrectPivot();
@@ -37,7 +40,9 @@ public class GridController : MonoBehaviour
                     PlaceToPreviousPos();
                 }
             }
-            else if (activeEquipmentSlot != null && activeEquipmentSlot.CheckIfEmpty())
+            else if (activeEquipmentSlot != null
+            && activeEquipmentSlot.CheckIfEmpty()
+            && heldItem.itemData.itemScript is ProjectileWeaponItems)
             {
                 activeEquipmentSlot.PlaceItem(heldItem);
                 heldItem = null;
@@ -117,5 +122,56 @@ public class GridController : MonoBehaviour
         {
             Debug.LogError("Missing item origin");
         }
+    }
+
+    private bool HandleReload()
+    {
+        if (heldItem.itemData.itemScript is MagazineAttachment)
+        {
+            if (activeGrid != null && activeGrid.GetItemAtMousePosition() != null)
+            {
+                InventoryItem item = activeGrid.GetItemAtMousePosition();
+
+                if (item.itemData.itemScript is ProjectileWeaponItems)
+                {
+                    ItemData insertedMag = (item.itemData.GetRuntimeData()
+                    as ProjectileWeaponItemsRuntimeData).insertedMagazine;
+
+                    if (insertedMag != null)
+                    {
+                        insertedMag.gameObject.SetActive(true);
+                        activeGrid.QuickAddToInventory(insertedMag);
+                    }
+
+                    (item.itemData.GetRuntimeData() as ProjectileWeaponItemsRuntimeData).insertedMagazine = heldItem.itemData;
+
+                    ItemData newInsertedMag = (item.itemData.GetRuntimeData()
+                    as ProjectileWeaponItemsRuntimeData).insertedMagazine;
+                    print((newInsertedMag.GetRuntimeData() as MagazineAttachmentRuntimeData).bulletCount);
+
+                    heldItem.gameObject.SetActive(false);
+                    heldItem = null;
+                    return true;
+                }
+            }
+            else if (activeEquipmentSlot != null
+            && !activeEquipmentSlot.CheckIfEmpty()
+            && activeEquipmentSlot.equippedItem.itemData.itemScript is ProjectileWeaponItems
+            && heldItem.itemData.itemScript is MagazineAttachment)
+            {
+                ProjectileWeaponItemsRuntimeData runtimeData = activeEquipmentSlot.equippedItem.itemData.GetRuntimeData() as ProjectileWeaponItemsRuntimeData;
+                if (runtimeData.insertedMagazine != null)
+                {
+                    runtimeData.insertedMagazine.gameObject.SetActive(true);
+                    lastActiveGrid.QuickAddToInventory(runtimeData.insertedMagazine);
+                }
+                runtimeData.insertedMagazine = heldItem.itemData;
+                heldItem.gameObject.SetActive(false);
+                heldItem = null;
+                return true;
+            }
+        }
+        return false;
+
     }
 }

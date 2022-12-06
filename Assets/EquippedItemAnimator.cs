@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditorInternal;
 using UnityEngine;
 
 public class EquippedItemAnimator : MonoBehaviour
@@ -11,30 +12,73 @@ public class EquippedItemAnimator : MonoBehaviour
 
     int armLayer;
 
+    bool isReloading = false;
+    bool staratedReloading = true;
+    float fadeTimer = Mathf.Infinity;
+    ItemBase item;
+
     private void Awake()
     {
         playerData = PlayerData.Instance;
         armLayer = animator.GetLayerIndex("Arm Layer");
     }
 
+    bool AnimatorIsPlaying()
+    {
+        return animator.GetCurrentAnimatorStateInfo(armLayer).length >
+               animator.GetCurrentAnimatorStateInfo(armLayer).normalizedTime;
+    }
+
+
     private void Update()
     {
-        if (playerData.isAiming)
+        if (playerData.equippedItem != null)
         {
-            SwitchAimingArmAnimation();
+            item = playerData.equippedItem.itemScript;
         }
-        else if (playerData.equippedItem != null)
+
+        if (fadeTimer < animationTransitionTime)
         {
-            SwitchIdleArmAnimation();
+            fadeTimer += Time.deltaTime;
+        }
+
+        if (!isReloading)
+        {
+            if (playerData.isAiming)
+            {
+                SwitchAimingArmAnimation();
+            }
+            else if (playerData.equippedItem != null)
+            {
+                SwitchIdleArmAnimation();
+            }
+            else
+            {
+                if (!animator.IsInTransition(armLayer))
+                {
+                    animator.CrossFadeInFixedTime("EmptyState", animationTransitionTime, armLayer);
+                }
+            }
         }
         else
         {
-            if (!animator.IsInTransition(armLayer))
+            if (!AnimatorIsPlaying())
             {
-                animator.CrossFadeInFixedTime("EmptyState", animationTransitionTime, armLayer);
+                isReloading = false;
+                animator.SetBool("isReloading", false);
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            isReloading = true;
+            animator.SetBool("isReloading", true);
+            animator.Play("Armature|ReloadM1911", armLayer);
+            fadeTimer = 0;
+        }
     }
+
+
 
     private void PlayAnimation(string name)
     {
@@ -46,9 +90,6 @@ public class EquippedItemAnimator : MonoBehaviour
 
     private void SwitchIdleArmAnimation()
     {
-        ItemBase item = playerData.equippedItem;
-
-
         // no item is equipped
         if (item == null)
         {
@@ -74,8 +115,6 @@ public class EquippedItemAnimator : MonoBehaviour
 
     private void SwitchAimingArmAnimation()
     {
-        ItemBase item = playerData.equippedItem;
-
         // no item is equipped
         if (item == null)
         {
@@ -105,8 +144,6 @@ public class EquippedItemAnimator : MonoBehaviour
 
     public void SwitchShootingArmAnimation()
     {
-        ItemBase item = playerData.equippedItem;
-
         // no item is equipped
         if (item == null)
         {

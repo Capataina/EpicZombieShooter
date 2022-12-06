@@ -23,45 +23,47 @@ public class ItemGrid : MonoBehaviour
         Init();
     }
 
-    public InventoryItem InstansiateItem(ItemBase item)
+    public InventoryItem InstansiateItem(ItemData itemData)
     {
         GameObject newInventoryItem = Instantiate(inventoryItemPrefab);
-        newInventoryItem.GetComponent<Image>().sprite = item.itemIcon;
+        newInventoryItem.GetComponent<Image>().sprite = itemData.itemScript.itemIcon;
         newInventoryItem.GetComponent<RectTransform>().sizeDelta = new Vector2(
-            item.inventoryWidth * tileSize,
-            item.inventoryHeight * tileSize
+            itemData.itemScript.inventoryWidth * tileSize,
+            itemData.itemScript.inventoryHeight * tileSize
         );
 
         InventoryItem newInventoryItemComp = newInventoryItem.GetComponent<InventoryItem>();
-        newInventoryItemComp.width = item.inventoryWidth;
-        newInventoryItemComp.height = item.inventoryHeight;
-        newInventoryItemComp.itemScript = item;
+        newInventoryItemComp.width = itemData.itemScript.inventoryWidth;
+        newInventoryItemComp.height = itemData.itemScript.inventoryHeight;
+
+        newInventoryItemComp.itemData.itemScript = itemData.itemScript;
+        newInventoryItemComp.itemData.runTimeDataID = itemData.runTimeDataID;
 
         return newInventoryItemComp;
     }
 
-    public void InstansiateAndAddItem(ItemBase item, int posX, int posY)
+    public void InstansiateAndAddItem(ItemData item, int posX, int posY)
     {
         AddItem(InstansiateItem(item), posX, posY);
     }
 
-    public void QuickAddToInventory(ItemBase item)
+    public void QuickAddToInventory(ItemData itemData)
     {
         bool rotated = false;
         Vector2Int pos = new Vector2Int(-1, -1);
-        for (int i = 0; i < inventoryItemSlots.GetLength(0); i++)
+        for (int j = 0; j < inventoryItemSlots.GetLength(1); j++)
         {
             if (pos.x == -1)
             {
-                for (int j = 0; j < inventoryItemSlots.GetLength(1); j++)
+                for (int i = 0; i < inventoryItemSlots.GetLength(0); i++)
                 {
-                    if (!CheckOverlapAndOverflowAtPosition(item.inventoryWidth, item.inventoryHeight, i, j))
+                    if (!CheckOverlapAndOverflowAtPosition(itemData.itemScript.inventoryWidth, itemData.itemScript.inventoryHeight, i, j))
                     {
                         pos = new Vector2Int(i, j);
                         break;
                     }
                     else
-                    if (!CheckOverlapAtPositionRotated(item.inventoryWidth, item.inventoryHeight, i, j))
+                    if (!CheckOverlapAtPositionRotated(itemData.itemScript.inventoryWidth, itemData.itemScript.inventoryHeight, i, j))
                     {
                         pos = new Vector2Int(i, j);
                         rotated = true;
@@ -76,7 +78,7 @@ public class ItemGrid : MonoBehaviour
         }
         if (pos.x != -1)
         {
-            InventoryItem newItem = InstansiateItem(item);
+            InventoryItem newItem = InstansiateItem(itemData);
             if (rotated)
             {
                 newItem.ToggleRotation();

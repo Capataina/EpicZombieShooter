@@ -10,3 +10,9 @@ public class ProjectileWeaponItems : EquipableItems
     public bool isAutomatic;
     public GameObject muzzleFlash;
 }
+
+[System.Serializable]
+public class ProjectileWeaponItemsRuntimeData : RuntimeData
+{
+    public ItemData insertedMagazine;
+}

@@ -35,13 +35,14 @@ public class PositionEquippedItem : MonoBehaviour
         }
     }
 
-    private void InitializeEquipment(ItemBase item)
+    private void InitializeEquipment(ItemData item)
     {
-        playerData.equipmentModel = Instantiate(playerData.equippedItem.itemModel, Vector3.zero, Quaternion.identity);
+        playerData.equipmentModel = Instantiate(item.itemScript.itemModel, Vector3.zero, Quaternion.identity);
+        playerData.equipmentModel.layer = LayerMask.GetMask("Default");
         playerData.equipmentModel.transform.parent = handIK.transform;
         playerData.equipmentModel.transform.localPosition = Vector3.zero;
         playerData.equipmentModel.transform.localRotation = Quaternion.identity;
-        GetComponent<WeasponShooting>().Initialize(item);
+        GetComponent<WeaponShooting>().Initialize(item);
     }
 
     private void RemoveEquippedItem()

@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class ItemBase : ScriptableObject
 {
     [SerializeField] public float itemId;
     [SerializeField] public string itemName;
+    [SerializeField] public GameObject itemObject;
     [SerializeField] public GameObject itemModel;
     [SerializeField] public Sprite itemIcon;
     [SerializeField] public int inventoryWidth;
@@ -16,4 +18,5 @@ public class ItemBase : ScriptableObject
     {
         playerData = PlayerData.Instance;
     }
+
 }
