@@ -1,8 +1,12 @@
 using System.ComponentModel;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class GridController : MonoBehaviour
 {
+    [SerializeField] EventSystem eventSystem;
+
     [HideInInspector] public ItemGrid activeGrid;
     [HideInInspector] public EquipmentSlot activeEquipmentSlot;
     [HideInInspector] public InventoryItem heldItem;
@@ -14,6 +18,8 @@ public class GridController : MonoBehaviour
     bool wasRotated;
     EquipmentSlot lastEquipmentSlot;
     Vector2 lastPivot;
+    GameObject activeContextMenu;
+
 
     private void Update()
     {
@@ -23,6 +29,25 @@ public class GridController : MonoBehaviour
             heldItem.ToggleRotation();
         }
 
+        if (activeGrid != null && Input.GetMouseButtonDown(1) && heldItem == null)
+        {
+            RemoveActiveContextMenu();
+            InventoryItem item = activeGrid.GetItemAtMousePosition();
+            if (item != null && item.itemData.itemScript.contextMenu != null)
+            {
+                GameObject contextMenu = Instantiate(item.itemData.itemScript.contextMenu);
+                contextMenu.GetComponent<ContextMenu>().Initialize(activeGrid, item);
+                activeContextMenu = contextMenu;
+                RectTransform contextMenuTransform = contextMenu.GetComponent<RectTransform>();
+                contextMenuTransform.SetParent(GetComponent<RectTransform>());
+                contextMenuTransform.position = Input.mousePosition;
+            }
+        }
+
+        //if (activeGrid == null && activeContextMenu != null)
+        //{
+        //RemoveActiveContextMenu();
+        //}
 
         if (Input.GetMouseButtonUp(0) && heldItem != null)
         {
@@ -56,6 +81,13 @@ public class GridController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && heldItem == null)
         {
+
+            GameObject currentObject = EventSystem.current.currentSelectedGameObject;
+            if (currentObject != null &&
+                currentObject.layer == LayerMask.NameToLayer("Context Menu")) return;
+
+            RemoveActiveContextMenu();
+
             if (activeGrid != null)
             {
                 heldItem = activeGrid.GetItemAtMousePosition();
@@ -124,6 +156,13 @@ public class GridController : MonoBehaviour
         }
     }
 
+    private void RemoveActiveContextMenu()
+    {
+        if (activeContextMenu == null) return;
+        Destroy(activeContextMenu);
+        activeContextMenu = null;
+    }
+
     private bool HandleReload()
     {
         if (heldItem.itemData.itemScript is MagazineAttachment)
@@ -134,8 +173,8 @@ public class GridController : MonoBehaviour
 
                 if (item.itemData.itemScript is ProjectileWeaponItems)
                 {
-                    ItemData insertedMag = (item.itemData.GetRuntimeData()
-                    as ProjectileWeaponItemsRuntimeData).insertedMagazine;
+                    ItemData insertedMag =
+                    item.itemData.GetRuntimeData<ProjectileWeaponItemsRuntimeData>().insertedMagazine;
 
                     if (insertedMag != null)
                     {
@@ -143,11 +182,12 @@ public class GridController : MonoBehaviour
                         activeGrid.QuickAddToInventory(insertedMag);
                     }
 
-                    (item.itemData.GetRuntimeData() as ProjectileWeaponItemsRuntimeData).insertedMagazine = heldItem.itemData;
+                    item.itemData.GetRuntimeData<ProjectileWeaponItemsRuntimeData>().insertedMagazine =
+                    heldItem.itemData;
 
-                    ItemData newInsertedMag = (item.itemData.GetRuntimeData()
-                    as ProjectileWeaponItemsRuntimeData).insertedMagazine;
-                    print((newInsertedMag.GetRuntimeData() as MagazineAttachmentRuntimeData).bulletCount);
+                    ItemData newInsertedMag =
+                    item.itemData.GetRuntimeData<ProjectileWeaponItemsRuntimeData>().insertedMagazine;
+                    print(newInsertedMag.GetRuntimeData<MagazineAttachmentRuntimeData>().bulletCount);
 
                     heldItem.gameObject.SetActive(false);
                     heldItem = null;
@@ -159,7 +199,8 @@ public class GridController : MonoBehaviour
             && activeEquipmentSlot.equippedItem.itemData.itemScript is ProjectileWeaponItems
             && heldItem.itemData.itemScript is MagazineAttachment)
             {
-                ProjectileWeaponItemsRuntimeData runtimeData = activeEquipmentSlot.equippedItem.itemData.GetRuntimeData() as ProjectileWeaponItemsRuntimeData;
+                ProjectileWeaponItemsRuntimeData runtimeData =
+                activeEquipmentSlot.equippedItem.itemData.GetRuntimeData<ProjectileWeaponItemsRuntimeData>();
                 if (runtimeData.insertedMagazine != null)
                 {
                     runtimeData.insertedMagazine.gameObject.SetActive(true);

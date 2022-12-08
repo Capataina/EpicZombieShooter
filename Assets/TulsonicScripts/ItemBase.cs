@@ -12,6 +12,7 @@ public class ItemBase : ScriptableObject
     [SerializeField] public Sprite itemIcon;
     [SerializeField] public int inventoryWidth;
     [SerializeField] public int inventoryHeight;
+    [SerializeField] public GameObject contextMenu;
     protected static PlayerData playerData;
 
     private void OnEnable()

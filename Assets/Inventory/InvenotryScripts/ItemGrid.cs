@@ -47,7 +47,7 @@ public class ItemGrid : MonoBehaviour
         AddItem(InstansiateItem(item), posX, posY);
     }
 
-    public void QuickAddToInventory(ItemData itemData)
+    public bool QuickAddToInventory(ItemData itemData)
     {
         bool rotated = false;
         Vector2Int pos = new Vector2Int(-1, -1);
@@ -85,7 +85,9 @@ public class ItemGrid : MonoBehaviour
                 newItem.CorrectPivot();
             }
             AddItem(newItem, pos.x, pos.y);
+            return true;
         }
+        return false;
     }
 
     private bool CheckOverlapAndOverflowAtPosition(int width, int height, int posX, int posY)

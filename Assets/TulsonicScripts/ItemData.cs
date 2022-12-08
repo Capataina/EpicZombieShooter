@@ -10,9 +10,9 @@ public class ItemData : MonoBehaviour
     [SerializeReference] public ItemBase itemScript;
     [HideInInspector] public Guid runTimeDataID;
 
-    public RuntimeData GetRuntimeData()
+    public T GetRuntimeData<T>() where T : RuntimeData
     {
-        return RuntimeDataManager.Instance.GetRuntimeData(runTimeDataID);
+        return RuntimeDataManager.Instance.GetRuntimeData(runTimeDataID) as T;
     }
 }
 

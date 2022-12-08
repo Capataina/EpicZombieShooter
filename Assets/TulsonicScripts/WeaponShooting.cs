@@ -34,7 +34,7 @@ public class WeaponShooting : MonoBehaviour
     {
         this.weaponData = weaponData;
         weaponScript = weaponData.itemScript as ProjectileWeaponItems;
-        runtimeData = weaponData.GetRuntimeData() as ProjectileWeaponItemsRuntimeData;
+        runtimeData = weaponData.GetRuntimeData<ProjectileWeaponItemsRuntimeData>();
         cooldownTimer = weaponScript.cooldown;
     }
 
@@ -53,7 +53,8 @@ public class WeaponShooting : MonoBehaviour
         if (cooldownTimer <= 0 && Input.GetMouseButton(1))
         {
             if (runtimeData.insertedMagazine != null
-            && (runtimeData.insertedMagazine.GetRuntimeData() as MagazineAttachmentRuntimeData).bulletCount > 0)
+            && runtimeData.insertedMagazine.
+            GetRuntimeData<MagazineAttachmentRuntimeData>().bulletCount > 0)
             {
                 if (weaponScript.isAutomatic)
                 {
@@ -95,6 +96,10 @@ public class WeaponShooting : MonoBehaviour
         RaycastHit hit;
 
         DisplayMuzzleFlash();
+
+        weaponData.GetRuntimeData<ProjectileWeaponItemsRuntimeData>().
+        insertedMagazine.GetRuntimeData<MagazineAttachmentRuntimeData>().
+        bulletCount -= 1;
 
         if (Physics.Raycast(transform.position, transform.forward, out hit, 100, LayerMask.GetMask("Default")))
         {
