@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemObject : MonoBehaviour
+public abstract class WeaponAttachmentItem : ItemBase
 {
-    public ItemBase itemScript;
 }

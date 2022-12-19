@@ -16,7 +16,7 @@ MonoBehaviour:
   states: 0
   maxHealth: 50
   maxStamina: 50
-  walkSpeed: 3.3
+  walkSpeed: 3
   sprintSpeed: 7
   aimSpeed: 2
   speed: 0

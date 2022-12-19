@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(ItemData))]
 public class InventoryItem : MonoBehaviour
 {
     [HideInInspector] public int width;
     [HideInInspector] public int height;
     [HideInInspector] public bool rotated = false;
-    [HideInInspector] public ItemBase itemScript;
+    [HideInInspector] public ItemData itemData;
 
     RectTransform rectTransform;
 
     private void OnEnable()
     {
-        rectTransform = GetComponent<RectTransform>();
+        rectTransform ??= GetComponent<RectTransform>();
+        itemData ??= GetComponent<ItemData>();
     }
 
     public void ToggleRotation()

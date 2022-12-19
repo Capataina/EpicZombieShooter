@@ -54,7 +54,7 @@ public class PlayerInventoryController : MonoBehaviour
                 }
             }
             inventoryCanvas.GetComponent<Canvas>().enabled = true;
-            inventoryGrid.QuickAddToInventory(closestItem.GetComponent<ItemObject>().itemScript);
+            inventoryGrid.QuickAddToInventory(closestItem.GetComponent<ItemData>());
             inventoryCanvas.GetComponent<Canvas>().enabled = false;
             Destroy(closestItem);
         }

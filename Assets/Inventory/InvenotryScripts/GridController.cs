@@ -1,7 +1,12 @@
+using System.ComponentModel;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class GridController : MonoBehaviour
 {
+    [SerializeField] EventSystem eventSystem;
+
     [HideInInspector] public ItemGrid activeGrid;
     [HideInInspector] public EquipmentSlot activeEquipmentSlot;
     [HideInInspector] public InventoryItem heldItem;
@@ -13,17 +18,43 @@ public class GridController : MonoBehaviour
     bool wasRotated;
     EquipmentSlot lastEquipmentSlot;
     Vector2 lastPivot;
+    GameObject activeContextMenu;
+
 
     private void Update()
     {
 
+        // handle rotation
         if (Input.GetKeyDown(KeyCode.R) && heldItem != null)
         {
             heldItem.ToggleRotation();
         }
 
+        // Handle context menus
+        if (Input.GetMouseButtonDown(1) && heldItem == null)
+        {
+            if (activeGrid != null)
+            {
+                InventoryItem item = activeGrid.GetItemAtMousePosition();
+                if (item != null)
+                {
+                    CreateContextMenu(item);
+                }
+            }
+            else if (activeEquipmentSlot != null)
+            {
+                InventoryItem item = activeEquipmentSlot.equippedItem;
+                if (item != null)
+                {
+                    CreateContextMenu(item);
+                }
+            }
+        }
+
+        // letting go of the held item
         if (Input.GetMouseButtonUp(0) && heldItem != null)
         {
+            if (HandleReload()) return;
             if (activeGrid != null)
             {
                 heldItem.CorrectPivot();
@@ -37,7 +68,9 @@ public class GridController : MonoBehaviour
                     PlaceToPreviousPos();
                 }
             }
-            else if (activeEquipmentSlot != null && activeEquipmentSlot.CheckIfEmpty())
+            else if (activeEquipmentSlot != null
+            && activeEquipmentSlot.CheckIfEmpty()
+            && heldItem.itemData.itemScript is ProjectileWeaponItems)
             {
                 activeEquipmentSlot.PlaceItem(heldItem);
                 heldItem = null;
@@ -48,9 +81,16 @@ public class GridController : MonoBehaviour
             }
         }
 
-
+        // picking up an item as heldItem
         if (Input.GetMouseButtonDown(0) && heldItem == null)
         {
+
+            GameObject currentObject = EventSystem.current.currentSelectedGameObject;
+            if (currentObject != null &&
+                currentObject.layer == LayerMask.NameToLayer("Context Menu")) return;
+
+            RemoveActiveContextMenu();
+
             if (activeGrid != null)
             {
                 heldItem = activeGrid.GetItemAtMousePosition();
@@ -117,5 +157,86 @@ public class GridController : MonoBehaviour
         {
             Debug.LogError("Missing item origin");
         }
+    }
+
+    private void RemoveActiveContextMenu()
+    {
+        if (activeContextMenu == null) return;
+        Destroy(activeContextMenu);
+        activeContextMenu = null;
+    }
+
+    private bool HandleReload()
+    {
+        if (heldItem.itemData.itemScript is MagazineAttachment)
+        {
+            if (activeGrid != null && activeGrid.GetItemAtMousePosition() != null)
+            {
+                InventoryItem item = activeGrid.GetItemAtMousePosition();
+
+                if (item.itemData.itemScript is ProjectileWeaponItems)
+                {
+                    ItemData insertedMag =
+                    item.itemData.GetRuntimeData<ProjectileWeaponItemsRuntimeData>().insertedMagazine;
+
+                    if (insertedMag != null)
+                    {
+                        insertedMag.gameObject.SetActive(true);
+                        activeGrid.QuickAddToInventory(insertedMag);
+                    }
+
+                    item.itemData.GetRuntimeData<ProjectileWeaponItemsRuntimeData>().insertedMagazine =
+                    heldItem.itemData;
+
+                    ItemData newInsertedMag =
+                    item.itemData.GetRuntimeData<ProjectileWeaponItemsRuntimeData>().insertedMagazine;
+                    print(newInsertedMag.GetRuntimeData<MagazineAttachmentRuntimeData>().bulletCount);
+
+                    heldItem.gameObject.SetActive(false);
+                    heldItem = null;
+                    return true;
+                }
+            }
+            else if (activeEquipmentSlot != null
+            && !activeEquipmentSlot.CheckIfEmpty()
+            && activeEquipmentSlot.equippedItem.itemData.itemScript is ProjectileWeaponItems
+            && heldItem.itemData.itemScript is MagazineAttachment)
+            {
+                ProjectileWeaponItemsRuntimeData runtimeData =
+                activeEquipmentSlot.equippedItem.itemData.GetRuntimeData<ProjectileWeaponItemsRuntimeData>();
+                if (runtimeData.insertedMagazine != null)
+                {
+                    runtimeData.insertedMagazine.gameObject.SetActive(true);
+                    lastActiveGrid.QuickAddToInventory(runtimeData.insertedMagazine);
+                }
+                runtimeData.insertedMagazine = heldItem.itemData;
+                heldItem.gameObject.SetActive(false);
+                heldItem = null;
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    private GameObject CreateContextMenu(InventoryItem item)
+    {
+        RemoveActiveContextMenu();
+        // UNSAFE need to combine slot and grid
+        GameObject contextMenu = null;
+        if (activeEquipmentSlot != null)
+        {
+            contextMenu = item.itemData.itemScript.CreateContextMenu(null, activeEquipmentSlot, item);
+        }
+        else if (activeGrid != null)
+        {
+            contextMenu = item.itemData.itemScript.CreateContextMenu(activeGrid, null, item);
+        }
+        if (contextMenu == null) return null;
+        activeContextMenu = contextMenu;
+        RectTransform contextMenuTransform = contextMenu.GetComponent<RectTransform>();
+        contextMenuTransform.SetParent(GetComponent<RectTransform>());
+        contextMenuTransform.position = Input.mousePosition;
+        return contextMenu;
     }
 }

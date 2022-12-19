@@ -18,8 +18,7 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
         BackPack
     }
 
-    [HideInInspector] public ItemBase equippedItem;
-
+    [HideInInspector] public ItemData equippedItem;
 
     public enum PlayerStates
     {
@@ -30,6 +29,8 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
     }
 
     public PlayerStates states;
+
+    [HideInInspector] public ItemGrid inventoryGrid;
 
     public float maxHealth = 50;
     private float health;
@@ -47,9 +48,9 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
 
     [HideInInspector] public GameObject equipmentModel;
 
-    public UnityEvent<ItemBase> itemEquippedEvent;
-    public UnityEvent<GameObject> playerAssignedEvent;
-    public UnityEvent itemUnequipEvent;
+    [HideInInspector] public UnityEvent<ItemData> itemEquippedEvent;
+    [HideInInspector] public UnityEvent<GameObject> playerAssignedEvent;
+    [HideInInspector] public UnityEvent itemUnequipEvent;
 
     [HideInInspector] public bool isAiming;
 
@@ -82,7 +83,7 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
     {
         Health = maxHealth;
         Stamina = maxStamina;
-        itemEquippedEvent ??= new UnityEvent<ItemBase>();
+        itemEquippedEvent ??= new UnityEvent<ItemData>();
         playerAssignedEvent ??= new UnityEvent<GameObject>();
     }
 
@@ -107,22 +108,22 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
         Stamina += sp;
     }
 
-    public void PickupItem(ItemBase item)
+    public void PickupItem(ItemData item)
     {
         // TODO needs to be changed
-        if (item is not ProjectileWeaponItems)
+        if (item.itemScript is not ProjectileWeaponItems)
         {
             //inventory.Add(item);
-            Debug.Log("picked up " + item.itemName);
+            Debug.Log("picked up " + item.itemScript.itemName);
         }
         else
         {
             EquipItem(item);
-            Debug.Log("equipped " + item.itemName);
+            Debug.Log("equipped " + item.itemScript.itemName);
         }
     }
 
-    public void EquipItem(ItemBase item)
+    public void EquipItem(ItemData item)
     {
         equippedItem = item;
 

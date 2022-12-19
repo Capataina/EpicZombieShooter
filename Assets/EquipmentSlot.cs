@@ -25,7 +25,7 @@ public class EquipmentSlot : MonoBehaviour
         item.PrepareForEquipmentSlot(this);
         equippedItem = item;
 
-        playerData.EquipItem(item.itemScript);
+        playerData.EquipItem(item.itemData);
     }
 
     public InventoryItem TakeItem()
