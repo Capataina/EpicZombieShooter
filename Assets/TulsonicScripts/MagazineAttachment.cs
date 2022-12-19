@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Weapon Attachements/Magazine")]
@@ -8,6 +6,11 @@ public class MagazineAttachment : WeaponAttachmentItem
 {
     public int bulletCapacity;
     public string weaponName;
+
+    public override ContextMenuButton[] ContextMenuRecipe(ItemGrid grid, EquipmentSlot slot, InventoryItem item)
+    {
+        return null;
+    }
 }
 
 

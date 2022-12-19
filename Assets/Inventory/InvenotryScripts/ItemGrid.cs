@@ -7,11 +7,12 @@ using UnityEngine.UI;
 
 public class ItemGrid : MonoBehaviour
 {
-    [SerializeField] int inventoryGridWidth;
-    [SerializeField] int inventoryGridHeight;
+    [SerializeField] int gridWidth;
+    [SerializeField] int gridHeight;
 
     [SerializeField] ItemBase itemToAddHorizontal;
     [SerializeField] GameObject inventoryItemPrefab;
+    [SerializeField] bool isInventoryGrid;
 
     InventoryItem[,] inventoryItemSlots;
     const int tileSize = 64;
@@ -21,6 +22,10 @@ public class ItemGrid : MonoBehaviour
     {
         rectTransform = GetComponent<RectTransform>();
         Init();
+        if (isInventoryGrid)
+        {
+            PlayerData.Instance.inventoryGrid = this;
+        }
     }
 
     public InventoryItem InstansiateItem(ItemData itemData)
@@ -127,8 +132,8 @@ public class ItemGrid : MonoBehaviour
     }
     private void Init()
     {
-        rectTransform.sizeDelta = new Vector2(inventoryGridWidth * tileSize, inventoryGridHeight * tileSize);
-        inventoryItemSlots = new InventoryItem[inventoryGridWidth, inventoryGridHeight];
+        rectTransform.sizeDelta = new Vector2(gridWidth * tileSize, gridHeight * tileSize);
+        inventoryItemSlots = new InventoryItem[gridWidth, gridHeight];
     }
 
     public void AddItem(InventoryItem item, int posX, int posY)

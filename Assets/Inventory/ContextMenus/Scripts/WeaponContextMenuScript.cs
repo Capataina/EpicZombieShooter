@@ -9,10 +9,21 @@ public class WeaponContextMenuScript : ContextMenu
         ProjectileWeaponItemsRuntimeData weaponRD =
         item.itemData.GetRuntimeData<ProjectileWeaponItemsRuntimeData>();
 
-        if (grid.QuickAddToInventory(weaponRD.insertedMagazine))
+        if (grid != null)
         {
-            Destroy(weaponRD.insertedMagazine.gameObject);
-            weaponRD.insertedMagazine = null;
+            if (grid.QuickAddToInventory(weaponRD.insertedMagazine))
+            {
+                Destroy(weaponRD.insertedMagazine.gameObject);
+                weaponRD.insertedMagazine = null;
+            }
+        }
+        else if (slot != null)
+        {
+            if (PlayerData.Instance.inventoryGrid.QuickAddToInventory(weaponRD.insertedMagazine))
+            {
+                Destroy(weaponRD.insertedMagazine.gameObject);
+                weaponRD.insertedMagazine = null;
+            }
         }
     }
 }

@@ -24,31 +24,34 @@ public class GridController : MonoBehaviour
     private void Update()
     {
 
+        // handle rotation
         if (Input.GetKeyDown(KeyCode.R) && heldItem != null)
         {
             heldItem.ToggleRotation();
         }
 
-        if (activeGrid != null && Input.GetMouseButtonDown(1) && heldItem == null)
+        // Handle context menus
+        if (Input.GetMouseButtonDown(1) && heldItem == null)
         {
-            RemoveActiveContextMenu();
-            InventoryItem item = activeGrid.GetItemAtMousePosition();
-            if (item != null && item.itemData.itemScript.contextMenu != null)
+            if (activeGrid != null)
             {
-                GameObject contextMenu = Instantiate(item.itemData.itemScript.contextMenu);
-                contextMenu.GetComponent<ContextMenu>().Initialize(activeGrid, item);
-                activeContextMenu = contextMenu;
-                RectTransform contextMenuTransform = contextMenu.GetComponent<RectTransform>();
-                contextMenuTransform.SetParent(GetComponent<RectTransform>());
-                contextMenuTransform.position = Input.mousePosition;
+                InventoryItem item = activeGrid.GetItemAtMousePosition();
+                if (item != null)
+                {
+                    CreateContextMenu(item);
+                }
+            }
+            else if (activeEquipmentSlot != null)
+            {
+                InventoryItem item = activeEquipmentSlot.equippedItem;
+                if (item != null)
+                {
+                    CreateContextMenu(item);
+                }
             }
         }
 
-        //if (activeGrid == null && activeContextMenu != null)
-        //{
-        //RemoveActiveContextMenu();
-        //}
-
+        // letting go of the held item
         if (Input.GetMouseButtonUp(0) && heldItem != null)
         {
             if (HandleReload()) return;
@@ -78,7 +81,7 @@ public class GridController : MonoBehaviour
             }
         }
 
-
+        // picking up an item as heldItem
         if (Input.GetMouseButtonDown(0) && heldItem == null)
         {
 
@@ -214,5 +217,26 @@ public class GridController : MonoBehaviour
         }
         return false;
 
+    }
+
+    private GameObject CreateContextMenu(InventoryItem item)
+    {
+        RemoveActiveContextMenu();
+        // UNSAFE need to combine slot and grid
+        GameObject contextMenu = null;
+        if (activeEquipmentSlot != null)
+        {
+            contextMenu = item.itemData.itemScript.CreateContextMenu(null, activeEquipmentSlot, item);
+        }
+        else if (activeGrid != null)
+        {
+            contextMenu = item.itemData.itemScript.CreateContextMenu(activeGrid, null, item);
+        }
+        if (contextMenu == null) return null;
+        activeContextMenu = contextMenu;
+        RectTransform contextMenuTransform = contextMenu.GetComponent<RectTransform>();
+        contextMenuTransform.SetParent(GetComponent<RectTransform>());
+        contextMenuTransform.position = Input.mousePosition;
+        return contextMenu;
     }
 }

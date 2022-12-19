@@ -20,7 +20,6 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
 
     [HideInInspector] public ItemData equippedItem;
 
-
     public enum PlayerStates
     {
         Idle,
@@ -30,6 +29,8 @@ public class PlayerData : SingletonScriptableObject<PlayerData>
     }
 
     public PlayerStates states;
+
+    [HideInInspector] public ItemGrid inventoryGrid;
 
     public float maxHealth = 50;
     private float health;
