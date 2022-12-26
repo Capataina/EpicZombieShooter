@@ -19,3 +19,5 @@ public class MagazineAttachmentRuntimeData : RuntimeData
 {
     [SerializeField] public int bulletCount;
 }
+
+
