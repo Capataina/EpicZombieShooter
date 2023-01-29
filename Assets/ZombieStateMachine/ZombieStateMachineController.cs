@@ -24,6 +24,9 @@ public class ZombieStateMachineController : MonoBehaviour
     public ZombieBaseAlertState alertState;
 
     [SerializeField]
+    public ZombieBaseDeathState investigateState;
+
+    [SerializeField]
     public ZombieBaseAttackState attackState;
 
     [SerializeField]
