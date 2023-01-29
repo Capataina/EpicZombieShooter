@@ -8,14 +8,17 @@ public class ZombieBaseAlertState : ZombieCurrentState
     [SerializeField] float alertSpeed;
     private float playerToZombieDistance;
 
+    // Check if zombie should attack
     private bool InMeleeRange(ZombieStateMachineController zombie)
     {
-        playerToZombieDistance = Vector3.Distance(
-            zombie.thePlayer.transform.position,
-            zombie.transform.position
-        );
+        Vector3 zombPlayerVec =
+            zombie.thePlayer.transform.position -
+            zombie.transform.position;
 
-        if (playerToZombieDistance <= 2)
+        RaycastHit hit;
+
+        if (Physics.Raycast(zombie.transform.position, zombPlayerVec.normalized, out hit, 2, LayerMask.GetMask("Default")) &&
+        hit.collider.gameObject.name == "Player")
         {
             return true;
         }
@@ -25,14 +28,17 @@ public class ZombieBaseAlertState : ZombieCurrentState
         }
     }
 
-    private bool isAlerted(ZombieStateMachineController zombie)
+    // Check if zombie should be in alert state
+    private bool IsAlerted(ZombieStateMachineController zombie)
     {
-        playerToZombieDistance = Vector3.Distance(
-            zombie.thePlayer.transform.position,
-            zombie.transform.position
-        );
+        Vector3 zombPlayerVec =
+            zombie.thePlayer.transform.position -
+            zombie.transform.position;
 
-        if (playerToZombieDistance <= 15)
+        RaycastHit hit;
+
+        if (Physics.Raycast(zombie.transform.position, zombPlayerVec.normalized, out hit, 15, LayerMask.GetMask("Default")) &&
+        hit.collider.gameObject.name == "Player")
         {
             return true;
         }
@@ -52,25 +58,15 @@ public class ZombieBaseAlertState : ZombieCurrentState
 
     public override void UpdateState(ZombieStateMachineController zombie)
     {
-        isAlerted(zombie);
-        InMeleeRange(zombie);
-
         zombie.playAnimation("Chase");
 
         if (InMeleeRange(zombie))
         {
             zombie.SwitchState(zombie.attackState);
         }
-        else
+        else if (!IsAlerted(zombie))
         {
-            if (isAlerted(zombie))
-            {
-                zombie.zombieNavAgent.destination = zombie.thePlayer.transform.position;
-            }
-            else
-            {
-                zombie.SwitchState(zombie.idleState);
-            }
+            zombie.SwitchState(zombie.investigateState);
         }
     }
 }
